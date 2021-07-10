@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string-array name="pics_array">
+        <item>https://stocksnap.io/search/people</item>
+        <item>https://stocksnap.io/search/beach</item>
+        <item>https://stocksnap.io/search/nature</item>
+    </string-array>
 </resources>
