@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -31,7 +31,8 @@
             android:id="@+id/searchBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fetch" />
+            android:text="Fetch"
+            android:textSize="10dp"/>
 
     </LinearLayout>
 <!--    <LinearLayout-->
@@ -81,11 +82,21 @@
 <!--        android:rowCount="5"-->
 <!--        android:columnCount="4"/>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="0.1"-->
+<!--        >-->
+<!--        <ProgressBar-->
+<!--            style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"-->
+<!--            android:id="@+id/progress_bar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"-->
+<!--            tools:visibility="visible"-->
+<!--        />-->
+
+<!--    </LinearLayout>-->
 
 </LinearLayout>
 

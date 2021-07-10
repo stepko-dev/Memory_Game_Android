@@ -13,9 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
@@ -28,6 +31,8 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
  Button mSearchBtn;
+    ProgressBar mProgressBar;
+
  List<String> listImages = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,32 +88,6 @@ public class MainActivity extends AppCompatActivity {
                     theurlgrabber grab = new theurlgrabber(url);
                     grab.execute();
 
-
-                    LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
-
-                    TableLayout table = new TableLayout(getApplicationContext());
-                    table.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f));
-                    layout.addView(table);
-
-                        for(int i=0;i<5;i++) {
-                            TableRow row = new TableRow(getApplicationContext());
-                            table.addView(row);
-                            for(int j=0;j<4;j++) {
-                                ImageView imageView = new ImageView(getApplicationContext());
-
-                                try {
-                                    imageView.setImageBitmap(BitmapFactory.decodeStream(new URL(listImages.get(i*4 + j)).openConnection().getInputStream()));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                //imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable)images[i*4 + j]).getBitmap(), 100, true)));
-                                imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
-                                row.addView(imageView);
-                            }
-                        }
-
-
-                    setContentView(layout);
                 }
             }
         });
@@ -129,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         return newBitmap;
     }
 
-    private class theurlgrabber  extends AsyncTask<Void, Void, Void> {
+    private class theurlgrabber  extends AsyncTask<Void, Integer, List<String>> {
        // String url = "https://stocksnap.io/search/business";
         String url;
         Random random = new Random();
@@ -140,10 +119,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPreExecute() {super.onPreExecute();}
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        protected void onProgressUpdate(Integer... progress){
+        }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected List<String> doInBackground(Void... voids) {
+            listImages.clear();
             try {
                 org.jsoup.nodes.Document document = Jsoup.connect(url).get();
                 org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
@@ -153,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
                     if(count<21){
                         String linkHref = link.getElementsByTag("img").attr("src");
                         listImages.add(linkHref);
+                       // publishProgress();
+                        //mProgressBar.setProgress((int) ((count / (float) count) * 100));
 
                         //System.out.println(linkHref);
                     }
@@ -167,7 +153,48 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            return null;
+            return listImages;
+        }
+
+        protected void onPostExecute(List<String> result){
+            LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
+
+            // it will not remove the view if cannot be found
+            layout.removeViewInLayout(findViewById(Integer.valueOf(1)));
+            layout.removeViewInLayout(findViewById(Integer.valueOf(2)));
+
+            //create the table again
+            TableLayout table = new TableLayout(getApplicationContext());
+            table.setId(Integer.valueOf(1));
+
+            table.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 2.0f));
+            layout.addView(table);
+
+            for(int i=0;i<5;i++) {
+                TableRow row = new TableRow(getApplicationContext());
+                table.addView(row);
+                for(int j=0;j<4;j++) {
+                    ImageView imageView = new ImageView(getApplicationContext());
+
+
+                    Picasso.with(MainActivity.this).load(result.get(i*4 + j)).resize(270,270).into(imageView);
+                    //imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable)images[i*4 + j]).getBitmap(), 100, true)));
+                    imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
+                    row.addView(imageView);
+                }
+            }
+            if ( findViewById(Integer.valueOf(2)) == null) {
+
+
+                ProgressBar progressBar = new ProgressBar(getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
+                progressBar.setId(Integer.valueOf(2));
+                progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setMax(100);
+                layout.addView(progressBar);
+            }
+            setContentView(layout);
+
         }
     }
 
