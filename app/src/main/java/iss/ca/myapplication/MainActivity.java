@@ -24,12 +24,14 @@ import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private
  Button mSearchBtn;
     ProgressBar mProgressBar;
 
@@ -50,18 +52,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Drawable[] images = new Drawable[] {
-                getDrawable(R.drawable.apple_10_resized), getDrawable(R.drawable.apple_11_resized),
-                getDrawable(R.drawable.apple_12_resized), getDrawable(R.drawable.apple_13_resized),
-                getDrawable(R.drawable.apple_17_resized), getDrawable(R.drawable.apple_18_resized),
-                getDrawable(R.drawable.apple_19_resized), getDrawable(R.drawable.apple_1_resized),
-                getDrawable(R.drawable.apple_20_resized), getDrawable(R.drawable.apple_21_resized),
-                getDrawable(R.drawable.apple_25_resized), getDrawable(R.drawable.apple_26_resized),
-                getDrawable(R.drawable.apple_27_resized), getDrawable(R.drawable.apple_28_resized),
-                getDrawable(R.drawable.apple_29_resized), getDrawable(R.drawable.apple_2_resized),
-                getDrawable(R.drawable.apple_3_resized), getDrawable(R.drawable.apple_4_resized),
-                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized)
-        };
+//        Drawable[] images = new Drawable[] {
+//                getDrawable(R.drawable.apple_10_resized), getDrawable(R.drawable.apple_11_resized),
+//                getDrawable(R.drawable.apple_12_resized), getDrawable(R.drawable.apple_13_resized),
+//                getDrawable(R.drawable.apple_17_resized), getDrawable(R.drawable.apple_18_resized),
+//                getDrawable(R.drawable.apple_19_resized), getDrawable(R.drawable.apple_1_resized),
+//                getDrawable(R.drawable.apple_20_resized), getDrawable(R.drawable.apple_21_resized),
+//                getDrawable(R.drawable.apple_25_resized), getDrawable(R.drawable.apple_26_resized),
+//                getDrawable(R.drawable.apple_27_resized), getDrawable(R.drawable.apple_28_resized),
+//                getDrawable(R.drawable.apple_29_resized), getDrawable(R.drawable.apple_2_resized),
+//                getDrawable(R.drawable.apple_3_resized), getDrawable(R.drawable.apple_4_resized),
+//                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized)
+//        };
 
 //        LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
 //
@@ -85,8 +87,35 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String url = spinner.getSelectedItem().toString();
                 if(url!= null){
-                    theurlgrabber grab = new theurlgrabber(url);
-                    grab.execute();
+                    try {
+                        org.jsoup.nodes.Document document = Jsoup.connect(url).get();
+                        org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
+                        int count = 0;
+                        for(org.jsoup.nodes.Element link : links) {
+                            count++;
+                            if(count<21){
+                                String linkHref = link.getElementsByTag("img").attr("src");
+                                listImages.add(linkHref);
+                                // publishProgress();
+                                //mProgressBar.setProgress((int) ((count / (float) count) * 100));
+
+                                //System.out.println(linkHref);
+                            }
+                            else{
+                                System.out.println(listImages.size());
+                                break;
+                            }
+
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    for( String imgUrl: listImages){
+                        theurlgrabber grab = new theurlgrabber()
+                                .execute(stringToURL(imgUrl));
+                    }
+
 
                 }
             }
@@ -94,7 +123,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+  // convert string to url
+    protected URL stringToURL(String urlString){
+        try{
+            URL url = new URL(urlString);
+            return url;
+        }
+        catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
                                    boolean filter) {
         float ratio = Math.min(
@@ -108,52 +147,49 @@ public class MainActivity extends AppCompatActivity {
         return newBitmap;
     }
 
-    private class theurlgrabber  extends AsyncTask<Void, Integer, List<String>> {
-       // String url = "https://stocksnap.io/search/business";
-        String url;
+    private class theurlgrabber  extends AsyncTask<URL, Void, Bitmap> {
+
         Random random = new Random();
         Integer pic = random.nextInt(20);
 
-        public theurlgrabber(String url) {
-        this.url = url;
-        }
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            mProgressBar.setVisibility(View.VISIBLE);
+            //super.onPreExecute();
         }
         protected void onProgressUpdate(Integer... progress){
         }
 
-        @Override
-        protected List<String> doInBackground(Void... voids) {
-            listImages.clear();
-            try {
-                org.jsoup.nodes.Document document = Jsoup.connect(url).get();
-                org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
-                int count = 0;
-                for(org.jsoup.nodes.Element link : links) {
-                    count++;
-                    if(count<21){
-                        String linkHref = link.getElementsByTag("img").attr("src");
-                        listImages.add(linkHref);
-                       // publishProgress();
-                        //mProgressBar.setProgress((int) ((count / (float) count) * 100));
 
-                        //System.out.println(linkHref);
-                    }
-                    else{
-                        System.out.println(listImages.size());
-                        break;
-                    }
+        protected Bitmap doInBackground(URL... urls) {
+//            listImages.clear();
+//            try {
+//                org.jsoup.nodes.Document document = Jsoup.connect(url).get();
+//                org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
+//                int count = 0;
+//                for(org.jsoup.nodes.Element link : links) {
+//                    count++;
+//                    if(count<21){
+//                        String linkHref = link.getElementsByTag("img").attr("src");
+//                        listImages.add(linkHref);
+//                       // publishProgress();
+//                        //mProgressBar.setProgress((int) ((count / (float) count) * 100));
+//
+//                        //System.out.println(linkHref);
+//                    }
+//                    else{
+//                        System.out.println(listImages.size());
+//                        break;
+//                    }
+//
+//                }
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return listImages;
+            return null;
         }
 
         protected void onPostExecute(List<String> result){
@@ -172,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
             for(int i=0;i<5;i++) {
                 TableRow row = new TableRow(getApplicationContext());
-                table.addView(row);
+                table.addView(row);ed
                 for(int j=0;j<4;j++) {
                     ImageView imageView = new ImageView(getApplicationContext());
 
