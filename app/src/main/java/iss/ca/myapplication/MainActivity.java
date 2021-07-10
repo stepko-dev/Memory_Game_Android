@@ -5,16 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
+import org.jsoup.Jsoup;
+import org.w3c.dom.Document;
+
+import java.io.IOException;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.pics_array, android.R.layout.simple_spinner_item);
 
-
         Drawable[] images = new Drawable[] {
                 getDrawable(R.drawable.apple_10_resized), getDrawable(R.drawable.apple_11_resized),
                 getDrawable(R.drawable.apple_12_resized), getDrawable(R.drawable.apple_13_resized),
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 getDrawable(R.drawable.apple_27_resized), getDrawable(R.drawable.apple_28_resized),
                 getDrawable(R.drawable.apple_29_resized), getDrawable(R.drawable.apple_2_resized),
                 getDrawable(R.drawable.apple_3_resized), getDrawable(R.drawable.apple_4_resized),
-                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized),
+                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized)
         };
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
@@ -58,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         setContentView(layout);
+
+        theurlgrabber grab = new theurlgrabber();
+        grab.execute();
     }
 
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
@@ -72,4 +78,41 @@ public class MainActivity extends AppCompatActivity {
                 height, filter);
         return newBitmap;
     }
+
+    private class theurlgrabber extends AsyncTask<Void, Void, Void> {
+        String url = "https://stocksnap.io/search/business";
+
+        Random random = new Random();
+        Integer pic = random.nextInt(20);
+
+        @Override
+        protected void onPreExecute() {super.onPreExecute();}
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                org.jsoup.nodes.Document document = Jsoup.connect(url).get();
+                org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
+
+                for(org.jsoup.nodes.Element link : links) {
+                    String linkHref = link.getElementsByTag("img").attr("src");
+                    System.out.println(linkHref);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+
+//    Document document = Jsoup.parse(html);
+//
+//    Elements images = document.select("img");
+//for (Element image : images) {
+//        String imageUrl = image.attr("data-original");
+//        System.out.println(imageUrl);
+//    }
 }
