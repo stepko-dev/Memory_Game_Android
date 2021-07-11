@@ -2,6 +2,7 @@ package iss.ca.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -31,6 +33,7 @@ import org.w3c.dom.Document;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     List<Bitmap> bitmaplist = new ArrayList<>();
     File mTargetFile;
 
- List<String> listImages = new ArrayList<>();
+    List<String> listImages = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,14 +71,19 @@ public class MainActivity extends AppCompatActivity {
                 R.array.pics_array, android.R.layout.simple_spinner_item);
 
 
-
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String url = spinner.getSelectedItem().toString();
 
+                listImages.clear();
                 new  retrieveImgUrl().execute(url);
-                        initImages();
+
+
+
+
+                initImages();
+                deleteAllFiles();
 
 
 
@@ -137,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(List<String>result){
             //super.onPostExecute(result);
+
             for(String imgUrls : result) {
                 mMyTask = new theurlgrabber().execute(stringToURL(imgUrls));
 
@@ -147,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class theurlgrabber  extends AsyncTask<URL, Void, Bitmap> {
-       // String url = "https://stocksnap.io/search/business";
+        // String url = "https://stocksnap.io/search/business";
         String url;
         Random random = new Random();
         Integer pic = random.nextInt(20);
@@ -203,6 +212,9 @@ public class MainActivity extends AppCompatActivity {
                 */
                 // Convert BufferedInputStream to Bitmap object
                 Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+               inputStream.close();
+               bufferedInputStream.close();
+               connection.disconnect();
 
                 // Return the downloaded bitmap
                 return bmp;
@@ -216,68 +228,38 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-//            listImages.clear();
-//            try {
-//                org.jsoup.nodes.Document document = Jsoup.connect(url).get();
-//                org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
-//                int count = 0;
-//                for(org.jsoup.nodes.Element link : links) {
-//                    count++;
-//                    if(count<21){
-//                        String linkHref = link.getElementsByTag("img").attr("src");
-//                        listImages.add(linkHref);
-//                       // publishProgress();
-//                        //mProgressBar.setProgress((int) ((count / (float) count) * 100));
-//
-//                        //System.out.println(linkHref);
-//                    }
-//                    else{
-//                        System.out.println(listImages.size());
-//                        break;
-//                    }
-//
-//                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-//            return null;
-//        }
-
         protected void onPostExecute(Bitmap result){
-           // if(result!=null){
+            // if(result!=null){
 
-                ImageView imageView = null;
-                Drawable testDrawable = null;
-                Integer x;
+            ImageView imageView = null;
+            Drawable testDrawable = null;
+            Integer x;
 
-                // Save bitmap to internal storage
-                Uri imageInternalUri = saveImageToInternalStorage(result);
+            // Save bitmap to internal storage
+            Uri imageInternalUri = saveImageToInternalStorage(result);
 
-                for(int i = 1; i <= 20; i++){
-                    imageView = findViewById(Integer.valueOf(i));
+            for(int i = 1; i <= 20; i++){
+                imageView = findViewById(Integer.valueOf(i));
 //                    testDrawable = getDrawable(Integer.valueOf(i));
 //                    testDrawable = (BitmapDrawable) getDrawable(R.drawable.image);
-                    // 213....
-                    x = (Integer) imageView.getTag();
+                // 213....
+                x = (Integer) imageView.getTag();
 
-                    // if x is not null means that image is a cross
-                    if(x != null){
-                        // Display the downloaded image into ImageView
-                        //imageView.setImageBitmap(result);
+                // if x is not null means that image is a cross
+                if(x != null){
+                    // Display the downloaded image into ImageView
+                    //imageView.setImageBitmap(result);
+                    Picasso.with(MainActivity.this).load(new File(imageInternalUri.getPath())).resize(270,270).into(imageView);
+                    // Set the ImageView image from internal storage
+                    //imageView.setImageURI(imageInternalUri);
+                    imageView.setTag(null); // means that image is not a cross
+                    break;
 
-
-                        // Set the ImageView image from internal storage
-                        imageView.setImageURI(imageInternalUri);
-                        imageView.setTag(null); // means that image is not a cross
-                        break;
-
-                    }
                 }
+            }
 
 
-          //  }
+            //  }
 
 
         }
@@ -293,26 +275,26 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-            File file = new File(directory,  bitmap.toString() + ".jpg");
-            //Bitmap bitmap = bitmaps.get(i);
+        File file = new File(directory,  bitmap.toString() + ".jpg");
+        //Bitmap bitmap = bitmaps.get(i);
 
-            if (!file.exists()) {
-                Log.d("path", file.toString());
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.flush();
-                    fos.close();
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                }
+        if (!file.exists()) {
+            Log.d("path", file.toString());
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
             }
-            // Parse the gallery image url to uri
-             Uri savedImageURI = Uri.parse(file.getAbsolutePath());
+        }
+        // Parse the gallery image url to uri
+        Uri savedImageURI = Uri.parse(file.getAbsolutePath());
 
-            // Return the saved image Uri
-            return savedImageURI;
+        // Return the saved image Uri
+        return savedImageURI;
     }
 
 
@@ -358,11 +340,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    Document document = Jsoup.parse(html);
-//
-//    Elements images = document.select("img");
-//for (Element image : images) {
-//        String imageUrl = image.attr("data-original");
-//        System.out.println(imageUrl);
-//    }
+    public void deleteAllFiles( )  {
+
+        try{
+            File directory = getDir("image9Dir", Context.MODE_PRIVATE);
+            File fd = new File(directory.getPath());
+            for(File child:fd.listFiles()){
+                child.delete();
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+//        if(directory.isDirectory() && directory.exists()){
+//            OutputStream out = new FileOutputStream(directory.,false);
+
+            //FileOutputStream fos = new FileOutputStream(directory);
+
+        }
 }
