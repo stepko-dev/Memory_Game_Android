@@ -177,6 +177,23 @@ public class GameActivity extends AppCompatActivity {
         });
 
     }
+
+    private void frontOfCardsResources() {
+        image101 = R.drawable.ic_image101;
+        image102 = R.drawable.ic_image102;
+        image103 = R.drawable.ic_image103;
+        image104 = R.drawable.ic_image104;
+        image105 = R.drawable.ic_image105;
+        image106 = R.drawable.ic_image106;
+        image201 = R.drawable.ic_image201;
+        image202 = R.drawable.ic_image202;
+        image203 = R.drawable.ic_image203;
+        image204 = R.drawable.ic_image204;
+        image205 = R.drawable.ic_image205;
+        image206 = R.drawable.ic_image206;
+
+    }
+
     public void timerStart(){
         timer = findViewById(R.id.timer);
         timer.setBase(SystemClock.elapsedRealtime());
@@ -184,7 +201,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void timerStop(){
-        timer = findViewById(R.id.chronometer);
+        timer = findViewById(R.id.timer);
         timer.stop();
     }
 
@@ -253,7 +270,7 @@ public class GameActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     //check if the selected images are equal
-                    calculate();
+                    calculate(clickedFirst, clickedSecond);
                 }
             }, 1000);
 
@@ -261,80 +278,66 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-    private void calculate() {
+    private void calculate(int clickedFirst, int clickedSecond) {
         //if images are equal remove tgem and add points
         if(firstCard == secondCard) {
-            if (clickedFirst == 0) {
-                iv_11.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 1) {
-                iv_12.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 2) {
-                iv_13.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 3) {
-                iv_14.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 4) {
-                iv_21.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 5) {
-                iv_22.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 6) {
-                iv_23.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 7) {
-                iv_24.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 8) {
-                iv_31.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 9) {
-                iv_32.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 10) {
-                iv_33.setVisibility(View.INVISIBLE);
-            } else if (clickedFirst == 11) {
-                iv_34.setVisibility(View.INVISIBLE);
-            }
-
-            if (clickedSecond == 0) {
-                iv_11.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 1) {
-                iv_12.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 2) {
-                iv_13.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 3) {
-                iv_14.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 4) {
-                iv_21.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 5) {
-                iv_22.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 6) {
-                iv_23.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 7) {
-                iv_24.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 8) {
-                iv_31.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 9) {
-                iv_32.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 10) {
-                iv_33.setVisibility(View.INVISIBLE);
-            } else if (clickedSecond == 11) {
-                iv_34.setVisibility(View.INVISIBLE);
-            }
-
-
-
                 playerPoints++;
                 tv_p1.setText(playerPoints + " out of 6 matches");
 
         }
         else {
+            //reset first card that was clicked
+            if(clickedFirst == 0)
             iv_11.setImageResource(R.drawable.cross);
+            if(clickedFirst == 1)
             iv_12.setImageResource(R.drawable.cross);
+            if(clickedFirst == 2)
             iv_13.setImageResource(R.drawable.cross);
+            if(clickedFirst == 3)
             iv_14.setImageResource(R.drawable.cross);
+            if(clickedFirst == 4)
             iv_21.setImageResource(R.drawable.cross);
+            if(clickedFirst == 5)
             iv_22.setImageResource(R.drawable.cross);
+            if(clickedFirst == 6)
             iv_23.setImageResource(R.drawable.cross);
+            if(clickedFirst == 7)
             iv_24.setImageResource(R.drawable.cross);
+            if(clickedFirst == 8)
             iv_31.setImageResource(R.drawable.cross);
+            if(clickedFirst == 9)
             iv_32.setImageResource(R.drawable.cross);
+            if(clickedFirst == 10)
             iv_33.setImageResource(R.drawable.cross);
+            if(clickedFirst == 11)
             iv_34.setImageResource(R.drawable.cross);
+
+            //reset second card that was clicked
+            if(clickedSecond == 0)
+                iv_11.setImageResource(R.drawable.cross);
+            if(clickedSecond == 1)
+                iv_12.setImageResource(R.drawable.cross);
+            if(clickedSecond == 2)
+                iv_13.setImageResource(R.drawable.cross);
+            if(clickedSecond == 3)
+                iv_14.setImageResource(R.drawable.cross);
+            if(clickedSecond == 4)
+                iv_21.setImageResource(R.drawable.cross);
+            if(clickedSecond == 5)
+                iv_22.setImageResource(R.drawable.cross);
+            if(clickedSecond == 6)
+                iv_23.setImageResource(R.drawable.cross);
+            if(clickedSecond == 7)
+                iv_24.setImageResource(R.drawable.cross);
+            if(clickedSecond == 8)
+                iv_31.setImageResource(R.drawable.cross);
+            if(clickedSecond == 9)
+                iv_32.setImageResource(R.drawable.cross);
+            if(clickedSecond == 10)
+                iv_33.setImageResource(R.drawable.cross);
+            if(clickedSecond == 11)
+                iv_34.setImageResource(R.drawable.cross);
+
 
 
         }
@@ -351,24 +354,29 @@ public class GameActivity extends AppCompatActivity {
         iv_33.setEnabled(true);
         iv_34.setEnabled(true);
 
+        if(firstCard == secondCard) {
+            if(clickedFirst == 0)
+                iv_11.setEnabled(false);
+
+
+        }
+
+
+
+
+
+
+
+
+
         //check if game is over
         checkEnd();
 
     }
 
     private void checkEnd() {
-        if(iv_11.getVisibility() == View.INVISIBLE &&
-                iv_12.getVisibility() == View.INVISIBLE &&
-                iv_13.getVisibility() == View.INVISIBLE &&
-                iv_14.getVisibility() == View.INVISIBLE &&
-                iv_21.getVisibility() == View.INVISIBLE &&
-                iv_22.getVisibility() == View.INVISIBLE &&
-                iv_23.getVisibility() == View.INVISIBLE &&
-                iv_24.getVisibility() == View.INVISIBLE &&
-                iv_31.getVisibility() == View.INVISIBLE &&
-                iv_32.getVisibility() == View.INVISIBLE &&
-                iv_33.getVisibility() == View.INVISIBLE &&
-                iv_34.getVisibility() == View.INVISIBLE) {
+        if(playerPoints == 6) {
+            timerStop();
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
             alertDialogBuilder
                     .setMessage("Game Over!\nP1: " + playerPoints)
@@ -378,7 +386,6 @@ public class GameActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                             startActivity(intent);
-//                            timerStop();
                             finish();
                         }
                     })
@@ -394,20 +401,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
-    private void frontOfCardsResources() {
-        image101 = R.drawable.ic_image101;
-        image102 = R.drawable.ic_image102;
-        image103 = R.drawable.ic_image103;
-        image104 = R.drawable.ic_image104;
-        image105 = R.drawable.ic_image105;
-        image106 = R.drawable.ic_image106;
-        image201 = R.drawable.ic_image201;
-        image202 = R.drawable.ic_image202;
-        image203 = R.drawable.ic_image203;
-        image204 = R.drawable.ic_image204;
-        image205 = R.drawable.ic_image205;
-        image206 = R.drawable.ic_image206;
 
-    }
 
 }
