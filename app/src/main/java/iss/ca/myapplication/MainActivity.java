@@ -227,23 +227,23 @@ public class MainActivity extends AppCompatActivity {
             // if(result!=null){
 
             ImageView imageView = null;
-            Integer tag;
+            String tag;
 
             // Save bitmap to internal storage
             Uri imageInternalUri = saveImageToInternalStorage(result);
 
             for(int i = 1; i <= 20; i++){
                 imageView = findViewById(Integer.valueOf(i));
-                tag = (Integer) imageView.getTag();
+                tag =  (String) imageView.getTag(R.string.none);
 
                 // if x is not null means that image is a cross
-                if(tag != null){
+                if(tag == null){
                     // Display the downloaded image into ImageView
                     //imageView.setImageBitmap(result);
                     Picasso.with(MainActivity.this).load(new File(imageInternalUri.getPath())).resize(270,270).into(imageView);
                     // Set the ImageView image from internal storage
                     //imageView.setImageURI(imageInternalUri);
-                    imageView.setTag(null); // means that image is not a cross
+                    imageView.setTag(R.string.none,result.toString()); // means that image is not a cross
 
                     mProgressBar = findViewById(Integer.valueOf(100));
                     mProgressBar.setProgress(i);
@@ -253,6 +253,23 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
+            List<String> selectedImage = new ArrayList<>();
+            for(int i=1; i<=20; i++){
+                imageView = findViewById(Integer.valueOf(i));
+
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final String imgFileName = (String) v.getTag(R.string.none);
+                        if(selectedImage.size()<6) {
+                            selectedImage.add(imgFileName);
+                        }
+                        if(selectedImage.size() == 6){
+
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -260,14 +277,12 @@ public class MainActivity extends AppCompatActivity {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("image9Dir", Context.MODE_PRIVATE);
 
-//        File parent = mTargetFile.getParentFile();
-//        if(!parent.exists() && !parent.mkdirs()){
-//            throw new IllegalStateException("couldn't create dir:" +parent);
-//        }
-
 
         File file = new File(directory,  bitmap.toString() + ".jpg");
         //Bitmap bitmap = bitmaps.get(i);
+
+
+
 
         if (!file.exists()) {
             Log.d("path", file.toString());
@@ -317,7 +332,8 @@ public class MainActivity extends AppCompatActivity {
                 ImageView imageView = new ImageView(getApplicationContext());
                 imageView.setId(i*4 + j + 1);
                 imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable) getDrawable(R.drawable.image)).getBitmap(), 100, true)));
-                imageView.setTag(R.drawable.image);
+                imageView.setTag(R.string.none, null);
+                //imageView.setTag(R.drawable.image);
                 // Picasso.with(MainActivity.this).load("drawable//" + R.drawable.image).resize(270,270).into(imageView);
                 imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
                 row.addView(imageView);
