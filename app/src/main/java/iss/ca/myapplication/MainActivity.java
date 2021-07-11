@@ -207,9 +207,9 @@ public class MainActivity extends AppCompatActivity {
                 */
                 // Convert BufferedInputStream to Bitmap object
                 Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-               inputStream.close();
-               bufferedInputStream.close();
-               connection.disconnect();
+                inputStream.close();
+                bufferedInputStream.close();
+                connection.disconnect();
 
                 // Return the downloaded bitmap
                 return bmp;
@@ -289,17 +289,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void initImages() {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
+        LinearLayout parent = (LinearLayout) findViewById(R.id.parentLayout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.pic_stabilizer);
+        LinearLayout progress = (LinearLayout) findViewById(R.id.progress_stabilizer);
 
         // Remember to delete images from storage when delete the table
         if(findViewById(Integer.valueOf(99)) != null)
             layout.removeViewInLayout(findViewById(Integer.valueOf(99)));
 
         if(findViewById(Integer.valueOf(100)) != null)
-            layout.removeViewInLayout(findViewById(Integer.valueOf(100)));
+            progress.removeViewInLayout(findViewById(Integer.valueOf(100)));
 
         if(findViewById(Integer.valueOf(101)) != null)
-            layout.removeViewInLayout(findViewById(Integer.valueOf(101)));
+            progress.removeViewInLayout(findViewById(Integer.valueOf(101)));
 
         //create the table again
         TableLayout table = new TableLayout(getApplicationContext());
@@ -330,14 +332,14 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setMax(20);
 
-        layout.addView(progressBar);
+        progress.addView(progressBar);
 
         TextView tv = new TextView(getApplicationContext());
         tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
         tv.setId(Integer.valueOf(101));
-        layout.addView(tv);
+        progress.addView(tv);
 
-        setContentView(layout);
+        setContentView(parent);
     }
 
 
@@ -356,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
 //        if(directory.isDirectory() && directory.exists()){
 //            OutputStream out = new FileOutputStream(directory.,false);
 
-            //FileOutputStream fos = new FileOutputStream(directory);
+        //FileOutputStream fos = new FileOutputStream(directory);
 
-        }
+    }
 }
