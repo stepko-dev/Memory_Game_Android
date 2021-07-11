@@ -249,22 +249,29 @@ public class MainActivity extends AppCompatActivity {
            // if(result!=null){
 
                 ImageView imageView = null;
+                Drawable testDrawable = null;
+                Integer x;
 
                 // Save bitmap to internal storage
                 Uri imageInternalUri = saveImageToInternalStorage(result);
 
                 for(int i = 1; i <= 20; i++){
                     imageView = findViewById(Integer.valueOf(i));
-                    if(imageView.getDrawable() == getDrawable(R.drawable.image)){
+//                    testDrawable = getDrawable(Integer.valueOf(i));
+//                    testDrawable = (BitmapDrawable) getDrawable(R.drawable.image);
+                    // 213....
+                    x = (Integer) imageView.getTag();
 
-
-
+                    // if x is not null means that image is a cross
+                    if(x != null){
                         // Display the downloaded image into ImageView
                         //imageView.setImageBitmap(result);
 
 
                         // Set the ImageView image from internal storage
                         imageView.setImageURI(imageInternalUri);
+                        imageView.setTag(null); // means that image is not a cross
+                        break;
 
                     }
                 }
@@ -333,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageView imageView = new ImageView(getApplicationContext());
                 imageView.setId(i*4 + j + 1);
                 imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable) getDrawable(R.drawable.image)).getBitmap(), 100, true)));
-
+                imageView.setTag(R.drawable.image);
                 // Picasso.with(MainActivity.this).load("drawable//" + R.drawable.image).resize(270,270).into(imageView);
                 imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
                 row.addView(imageView);
