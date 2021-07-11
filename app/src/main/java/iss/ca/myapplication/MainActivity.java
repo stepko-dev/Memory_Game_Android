@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -48,9 +50,11 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     Button mSearchBtn;
     ProgressBar mProgressBar;
+    TextView tv;
     private AsyncTask mMyTask;
     List<Bitmap> bitmaplist = new ArrayList<>();
     File mTargetFile;
+//    int counter = 0;
 
     List<String> listImages = new ArrayList<>();
     @Override
@@ -77,21 +81,13 @@ public class MainActivity extends AppCompatActivity {
                 String url = spinner.getSelectedItem().toString();
 
                 listImages.clear();
+                initImages();
                 new  retrieveImgUrl().execute(url);
 
-
-
-
-                initImages();
+//                initImages();
                 deleteAllFiles();
-
-
-
-
             }
         });
-
-
     }
 
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
@@ -148,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
             for(String imgUrls : result) {
                 mMyTask = new theurlgrabber().execute(stringToURL(imgUrls));
-
             }
         }
 
@@ -232,36 +227,32 @@ public class MainActivity extends AppCompatActivity {
             // if(result!=null){
 
             ImageView imageView = null;
-            Drawable testDrawable = null;
-            Integer x;
+            Integer tag;
 
             // Save bitmap to internal storage
             Uri imageInternalUri = saveImageToInternalStorage(result);
 
             for(int i = 1; i <= 20; i++){
                 imageView = findViewById(Integer.valueOf(i));
-//                    testDrawable = getDrawable(Integer.valueOf(i));
-//                    testDrawable = (BitmapDrawable) getDrawable(R.drawable.image);
-                // 213....
-                x = (Integer) imageView.getTag();
+                tag = (Integer) imageView.getTag();
 
                 // if x is not null means that image is a cross
-                if(x != null){
+                if(tag != null){
                     // Display the downloaded image into ImageView
                     //imageView.setImageBitmap(result);
                     Picasso.with(MainActivity.this).load(new File(imageInternalUri.getPath())).resize(270,270).into(imageView);
                     // Set the ImageView image from internal storage
                     //imageView.setImageURI(imageInternalUri);
                     imageView.setTag(null); // means that image is not a cross
-                    break;
 
+                    mProgressBar = findViewById(Integer.valueOf(100));
+                    mProgressBar.setProgress(i);
+                    tv = findViewById(Integer.valueOf(101));
+                    tv.setGravity(Gravity.CENTER | Gravity.TOP);
+                    tv.setText("Downloading " + i + " of 20 images..." );
+                    break;
                 }
             }
-
-
-            //  }
-
-
         }
     }
 
@@ -297,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
         return savedImageURI;
     }
 
-
     protected void initImages() {
         LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
 
@@ -307,6 +297,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(findViewById(Integer.valueOf(100)) != null)
             layout.removeViewInLayout(findViewById(Integer.valueOf(100)));
+
+        if(findViewById(Integer.valueOf(101)) != null)
+            layout.removeViewInLayout(findViewById(Integer.valueOf(101)));
 
         //create the table again
         TableLayout table = new TableLayout(getApplicationContext());
@@ -331,10 +324,18 @@ public class MainActivity extends AppCompatActivity {
 
         ProgressBar progressBar = new ProgressBar(getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
         progressBar.setId(Integer.valueOf(100));
-        progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+        progressBar.setLayoutParams(new LinearLayout.LayoutParams(875, 100, 1.0f));
+        progressBar.setScaleY(8.0f);
+        progressBar.setPadding(200,0,0,0);
         progressBar.setVisibility(View.VISIBLE);
-        progressBar.setMax(100);
+        progressBar.setMax(20);
+
         layout.addView(progressBar);
+
+        TextView tv = new TextView(getApplicationContext());
+        tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+        tv.setId(Integer.valueOf(101));
+        layout.addView(tv);
 
         setContentView(layout);
     }
