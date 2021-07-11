@@ -27,6 +27,7 @@ public class GameActivity extends AppCompatActivity {
 
     ImageView iv_11, iv_12, iv_13, iv_14, iv_21, iv_22, iv_23, iv_24, iv_31, iv_32, iv_33, iv_34;
 
+
     //array for the images
     Integer[] cardsArray = {101, 102, 103, 104, 105, 106, 201, 202, 203, 204, 205, 206,};
 
@@ -67,18 +68,19 @@ public class GameActivity extends AppCompatActivity {
         iv_33 = (ImageView) findViewById(R.id.iv_33);
         iv_34 = (ImageView) findViewById(R.id.iv_34);
 
-        iv_11.setTag("0");
-        iv_12.setTag("1");
-        iv_13.setTag("2");
-        iv_14.setTag("3");
-        iv_21.setTag("4");
-        iv_22.setTag("5");
-        iv_23.setTag("6");
-        iv_24.setTag("7");
-        iv_31.setTag("8");
-        iv_32.setTag("9");
-        iv_33.setTag("10");
-        iv_34.setTag("11");
+
+//        iv_11.setTag("0");
+//        iv_12.setTag("1");
+//        iv_13.setTag("2");
+//        iv_14.setTag("3");
+//        iv_21.setTag("4");
+//        iv_22.setTag("5");
+//        iv_23.setTag("6");
+//        iv_24.setTag("7");
+//        iv_31.setTag("8");
+//        iv_32.setTag("9");
+//        iv_33.setTag("10");
+//        iv_34.setTag("11");
 
         //load the car images
         frontOfCardsResources();

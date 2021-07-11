@@ -14,6 +14,7 @@
 
         <ImageView
             android:id="@+id/iv_11"
+            android:tag="0"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -22,6 +23,7 @@
 
         <ImageView
             android:id="@+id/iv_12"
+            android:tag="1"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -30,6 +32,7 @@
 
         <ImageView
             android:id="@+id/iv_13"
+            android:tag="2"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -48,6 +51,7 @@
 
         <ImageView
             android:id="@+id/iv_14"
+            android:tag="3"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -56,6 +60,7 @@
 
         <ImageView
             android:id="@+id/iv_21"
+            android:tag="4"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -64,6 +69,7 @@
 
         <ImageView
             android:id="@+id/iv_22"
+            android:tag="5"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -82,6 +88,7 @@
 
         <ImageView
             android:id="@+id/iv_23"
+            android:tag="6"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -90,6 +97,7 @@
 
         <ImageView
             android:id="@+id/iv_24"
+            android:tag="7"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -98,6 +106,7 @@
 
         <ImageView
             android:id="@+id/iv_31"
+            android:tag="8"
             android:scaleType="fitXY"
             android:layout_weight="1"
             android:src="@drawable/cross"
@@ -115,6 +124,7 @@
 
     <ImageView
         android:id="@+id/iv_32"
+        android:tag="9"
         android:scaleType="fitXY"
         android:layout_weight="1"
         android:src="@drawable/cross"
@@ -123,6 +133,7 @@
 
     <ImageView
         android:id="@+id/iv_33"
+        android:tag="10"
         android:scaleType="fitXY"
         android:layout_weight="1"
         android:src="@drawable/cross"
@@ -131,6 +142,7 @@
 
     <ImageView
         android:id="@+id/iv_34"
+        android:tag="11"
         android:scaleType="fitXY"
         android:layout_weight="1"
         android:src="@drawable/cross"
