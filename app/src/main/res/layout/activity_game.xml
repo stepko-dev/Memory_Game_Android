@@ -21,7 +21,9 @@
             android:layout_weight="9"
             android:gravity="center_vertical"
             android:text="0 out of 6 matches"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
 
         <Chronometer
             android:id="@+id/timer"
@@ -29,7 +31,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
 
     </LinearLayout>

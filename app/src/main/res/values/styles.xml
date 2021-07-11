@@ -5,6 +5,11 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <style name="Matches_Timer">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 
 </resources>

@@ -192,12 +192,12 @@ public class GameActivity extends AppCompatActivity {
         image104 = R.drawable.ic_image104;
         image105 = R.drawable.ic_image105;
         image106 = R.drawable.ic_image106;
-        image201 = R.drawable.ic_image201;
-        image202 = R.drawable.ic_image202;
-        image203 = R.drawable.ic_image203;
-        image204 = R.drawable.ic_image204;
-        image205 = R.drawable.ic_image205;
-        image206 = R.drawable.ic_image206;
+        image201 = R.drawable.ic_image101;
+        image202 = R.drawable.ic_image102;
+        image203 = R.drawable.ic_image103;
+        image204 = R.drawable.ic_image104;
+        image205 = R.drawable.ic_image105;
+        image206 = R.drawable.ic_image106;
 
     }
 
