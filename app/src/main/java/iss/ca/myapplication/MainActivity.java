@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,

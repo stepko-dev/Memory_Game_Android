@@ -22,7 +22,6 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:theme="@style/textStyle"
             tools:listitem="@layout/support_simple_spinner_dropdown_item"
             android:entries="@array/pics_array"/>
 
