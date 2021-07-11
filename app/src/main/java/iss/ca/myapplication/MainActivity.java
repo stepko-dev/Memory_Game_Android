@@ -69,74 +69,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-        Drawable[] images = new Drawable[] {
-                getDrawable(R.drawable.apple_10_resized), getDrawable(R.drawable.apple_11_resized),
-                getDrawable(R.drawable.apple_12_resized), getDrawable(R.drawable.apple_13_resized),
-                getDrawable(R.drawable.apple_17_resized), getDrawable(R.drawable.apple_18_resized),
-                getDrawable(R.drawable.apple_19_resized), getDrawable(R.drawable.apple_1_resized),
-                getDrawable(R.drawable.apple_20_resized), getDrawable(R.drawable.apple_21_resized),
-                getDrawable(R.drawable.apple_25_resized), getDrawable(R.drawable.apple_26_resized),
-                getDrawable(R.drawable.apple_27_resized), getDrawable(R.drawable.apple_28_resized),
-                getDrawable(R.drawable.apple_29_resized), getDrawable(R.drawable.apple_2_resized),
-                getDrawable(R.drawable.apple_3_resized), getDrawable(R.drawable.apple_4_resized),
-                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized)
-        };
-
-//        LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
-//
-//        TableLayout table = new TableLayout(this);
-//        table.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f));
-//        layout.addView(table);
-//        for(int i=0;i<5;i++) {
-//            TableRow row = new TableRow(this);
-//            table.addView(row);
-//            for(int j=0;j<4;j++) {
-//                ImageView imageView = new ImageView(this);
-//                imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable)images[i*4 + j]).getBitmap(), 100, true)));
-//                imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
-//                row.addView(imageView);
-//            }
-//        }
-//        setContentView(layout);
-
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String url = spinner.getSelectedItem().toString();
-                if(url!= null){
-                   // try {
+
+                new  retrieveImgUrl().execute(url);
                         initImages();
 
-//                        org.jsoup.nodes.Document document = Jsoup.connect(url).get();
-//                        org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
-//                        int count = 0;
-//                        for(org.jsoup.nodes.Element link : links) {
-//                            count++;
-//                            if(count<21){
-//                                String linkHref = link.getElementsByTag("img").attr("src");
-//                                listImages.add(linkHref);
-//                                // publishProgress();
-//                                //mProgressBar.setProgress((int) ((count / (float) count) * 100));
-//
-//                                //System.out.println(linkHref);
-//                            }
-//                            else{
-//                                System.out.println(listImages.size());
-//                                break;
-//                            }
-//
-//                        }
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                   new  retrieveImgUrl().execute(url);
-                    for(String imgUrls : listImages) {
-                        mMyTask = new theurlgrabber().execute(stringToURL(imgUrls));
-                    }
 
-                }
+
+
             }
         });
 
@@ -180,28 +123,24 @@ public class MainActivity extends AppCompatActivity {
                     if(count<21){
                         String linkHref = link.getElementsByTag("img").attr("src");
                         listImages.add(linkHref);
-                       // publishProgress();
-                        //mProgressBar.setProgress((int) ((count / (float) count) * 100));
-
-                        //System.out.println(linkHref);
                     }
                     else{
-                        System.out.println(listImages.size());
-                        break;
+                        return listImages;
                     }
-
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            return listImages;
+            return null;
         }
 
-        @Override
+
         protected void onPostExecute(List<String>result){
-            super.onPostExecute(result);
+            //super.onPostExecute(result);
+            for(String imgUrls : result) {
+                mMyTask = new theurlgrabber().execute(stringToURL(imgUrls));
+
+            }
         }
 
 
@@ -213,9 +152,6 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         Integer pic = random.nextInt(20);
 
-//        public theurlgrabber(String url) {
-//        this.url = url;
-//        }
 
         @Override
         protected void onPreExecute() {
@@ -310,29 +246,31 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         protected void onPostExecute(Bitmap result){
-            if(result!=null){
+           // if(result!=null){
 
                 ImageView imageView = null;
 
                 // Save bitmap to internal storage
                 Uri imageInternalUri = saveImageToInternalStorage(result);
 
-                for(int i = 1; i <= 20; i++)
+                for(int i = 1; i <= 20; i++){
                     imageView = findViewById(Integer.valueOf(i));
                     if(imageView.getDrawable() == getDrawable(R.drawable.image)){
 
 
 
                         // Display the downloaded image into ImageView
-//                        imageView.setImageBitmap(result);
+                        //imageView.setImageBitmap(result);
 
 
                         // Set the ImageView image from internal storage
                         imageView.setImageURI(imageInternalUri);
 
                     }
+                }
 
-            }
+
+          //  }
 
 
         }
@@ -394,8 +332,9 @@ public class MainActivity extends AppCompatActivity {
             for(int j=0;j<4;j++) {
                 ImageView imageView = new ImageView(getApplicationContext());
                 imageView.setId(i*4 + j + 1);
-                Picasso.with(MainActivity.this).load("drawable//" + R.drawable.image).resize(270,270).into(imageView);
-//                    imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown((Bitmap)(getDrawable(R.drawable.image)).getBitmap(), 100, true)));
+                imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable) getDrawable(R.drawable.image)).getBitmap(), 100, true)));
+
+                // Picasso.with(MainActivity.this).load("drawable//" + R.drawable.image).resize(270,270).into(imageView);
                 imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f));
                 row.addView(imageView);
             }
