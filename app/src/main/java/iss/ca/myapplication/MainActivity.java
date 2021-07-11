@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
         mSearchBtn = (Button) findViewById(R.id.searchBtn);
 
-        String filePath = "SampleFolder";
-        String fileName = "SampleFile.jpg";
-        mTargetFile = new File(getFilesDir(), filePath + "/" + fileName);
+//        String filePath = "SampleFolder";
+//        String fileName = "SampleFile.jpg";
+//        mTargetFile = new File(getFilesDir(), filePath + "/" + fileName);
 
 
         Spinner spinner = (Spinner) findViewById(R.id.search);
@@ -227,14 +227,14 @@ public class MainActivity extends AppCompatActivity {
             // if(result!=null){
 
             ImageView imageView = null;
-            String tag;
+            Bitmap tag;
 
             // Save bitmap to internal storage
             Uri imageInternalUri = saveImageToInternalStorage(result);
 
             for(int i = 1; i <= 20; i++){
                 imageView = findViewById(Integer.valueOf(i));
-                tag =  (String) imageView.getTag(R.string.none);
+                tag =  (Bitmap)imageView.getTag(R.string.none);
 
                 // if x is not null means that image is a cross
                 if(tag == null){
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                     Picasso.with(MainActivity.this).load(new File(imageInternalUri.getPath())).resize(270,270).into(imageView);
                     // Set the ImageView image from internal storage
                     //imageView.setImageURI(imageInternalUri);
-                    imageView.setTag(R.string.none,result.toString()); // means that image is not a cross
+                    imageView.setTag(R.string.none,result); // means that image is not a cross
 
                     mProgressBar = findViewById(Integer.valueOf(100));
                     mProgressBar.setProgress(i);
@@ -253,19 +253,20 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
-            List<String> selectedImage = new ArrayList<>();
+            List<Bitmap> selectedImage = new ArrayList<>();
             for(int i=1; i<=20; i++){
                 imageView = findViewById(Integer.valueOf(i));
 
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final String imgFileName = (String) v.getTag(R.string.none);
+                        final Bitmap bitMapFile = (Bitmap) v.getTag(R.string.none);
                         if(selectedImage.size()<6) {
-                            selectedImage.add(imgFileName);
+                            selectedImage.add(bitMapFile);
                         }
                         if(selectedImage.size() == 6){
-
+                            deleteRemainingFiles(selectedImage);
+                            System.out.println("end");
                         }
                     }
                 });
@@ -363,18 +364,59 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             File directory = getDir("image9Dir", Context.MODE_PRIVATE);
-            File fd = new File(directory.getPath());
-            for(File child:fd.listFiles()){
-                child.delete();
+            if(directory.exists()){
+                for(File child:directory.listFiles()){
+                    child.delete();
+                }
             }
+
         }
         catch(Exception e){
             e.printStackTrace();
         }
-//        if(directory.isDirectory() && directory.exists()){
-//            OutputStream out = new FileOutputStream(directory.,false);
 
-        //FileOutputStream fos = new FileOutputStream(directory);
 
     }
+
+    public void deleteRemainingFiles(List<Bitmap> bitmapList){
+        File directory = getDir("image9Dir", Context.MODE_PRIVATE);
+
+        List<File> fileList = new ArrayList<File>();
+        if(directory.exists()){
+            for(File child:directory.listFiles()){
+               for(Bitmap bm: bitmapList){
+                   if(child.toString().contains(bm.toString()) ){
+                       fileList.add(child);
+
+                   }
+               }
+            }
+            deleteAllFiles();
+
+
+            try{
+                for(File orphanFile: fileList){
+                    if (!orphanFile.exists()) {
+                        Log.d("path", orphanFile.toString());
+                        FileOutputStream fos = null;
+                        fos = new FileOutputStream(orphanFile);
+                        for(Bitmap bm: bitmapList)
+                        {
+                            if(orphanFile.toString().contains(bm.toString()))
+                            {
+                                File file = new File(directory,  bm.toString() + ".jpg");
+                                bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            }
+                        }
+                        fos.flush();
+                        fos.close();
+                    }
+                }
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
