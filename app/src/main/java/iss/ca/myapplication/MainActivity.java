@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -262,11 +263,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         final Bitmap bitMapFile = (Bitmap) v.getTag(R.string.none);
                         if(selectedImage.size()<6) {
+                            v.setAlpha(0.2f);
+                            v.setEnabled(false);
                             selectedImage.add(bitMapFile);
                         }
                         if(selectedImage.size() == 6){
                             deleteRemainingFiles(selectedImage);
-                            System.out.println("end");
+                           Intent intent =  new Intent(MainActivity.this,SecondActivity.class);
+                           startActivity(intent);
                         }
                     }
                 });
@@ -286,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (!file.exists()) {
-            Log.d("path", file.toString());
+//            Log.d("path", file.toString());
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file);
