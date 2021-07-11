@@ -64,6 +64,7 @@
             android:layout_weight="1">
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_11"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -71,6 +72,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_12"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -78,6 +80,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_13"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -97,6 +100,7 @@
             android:layout_weight="1">
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_14"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -104,6 +108,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_21"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -111,6 +116,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_22"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -124,6 +130,7 @@
             android:layout_weight="1">
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_23"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -131,6 +138,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_24"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -138,6 +146,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_31"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -151,6 +160,7 @@
             android:layout_weight="1">
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_32"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -158,6 +168,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_33"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -165,6 +176,7 @@
                 android:src="@drawable/cross" />
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/iv_34"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

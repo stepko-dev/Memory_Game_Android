@@ -14,8 +14,12 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -36,6 +40,9 @@ public class GameActivity extends AppCompatActivity {
 
     int playerPoints = 0;
     private Chronometer timer;
+
+    List<Integer> matchedCards = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +259,7 @@ public class GameActivity extends AppCompatActivity {
             cardNumber = 1;
             clickedSecond = card;
 
+
             iv_11.setEnabled(false);
             iv_12.setEnabled(false);
             iv_13.setEnabled(false);
@@ -272,7 +280,7 @@ public class GameActivity extends AppCompatActivity {
                     //check if the selected images are equal
                     calculate(clickedFirst, clickedSecond);
                 }
-            }, 1000);
+            }, 800);
 
         }
 
@@ -280,67 +288,102 @@ public class GameActivity extends AppCompatActivity {
 
     private void calculate(int clickedFirst, int clickedSecond) {
         //if images are equal remove tgem and add points
+
+
+
         if(firstCard == secondCard) {
                 playerPoints++;
                 tv_p1.setText(playerPoints + " out of 6 matches");
+
+                //add matched cards(positions) to list
+                matchedCards.add(clickedFirst);
+                matchedCards.add(clickedSecond);
 
         }
         else {
             //reset first card that was clicked
             if(clickedFirst == 0)
             iv_11.setImageResource(R.drawable.cross);
-            if(clickedFirst == 1)
+            else if(clickedFirst == 1)
             iv_12.setImageResource(R.drawable.cross);
-            if(clickedFirst == 2)
+            else if(clickedFirst == 2)
             iv_13.setImageResource(R.drawable.cross);
-            if(clickedFirst == 3)
+            else if(clickedFirst == 3)
             iv_14.setImageResource(R.drawable.cross);
-            if(clickedFirst == 4)
+            else if(clickedFirst == 4)
             iv_21.setImageResource(R.drawable.cross);
-            if(clickedFirst == 5)
+            else if(clickedFirst == 5)
             iv_22.setImageResource(R.drawable.cross);
-            if(clickedFirst == 6)
+            else if(clickedFirst == 6)
             iv_23.setImageResource(R.drawable.cross);
-            if(clickedFirst == 7)
+            else if(clickedFirst == 7)
             iv_24.setImageResource(R.drawable.cross);
-            if(clickedFirst == 8)
+            else if(clickedFirst == 8)
             iv_31.setImageResource(R.drawable.cross);
-            if(clickedFirst == 9)
+            else if(clickedFirst == 9)
             iv_32.setImageResource(R.drawable.cross);
-            if(clickedFirst == 10)
+            else if(clickedFirst == 10)
             iv_33.setImageResource(R.drawable.cross);
-            if(clickedFirst == 11)
+            else if(clickedFirst == 11)
             iv_34.setImageResource(R.drawable.cross);
 
             //reset second card that was clicked
             if(clickedSecond == 0)
                 iv_11.setImageResource(R.drawable.cross);
-            if(clickedSecond == 1)
+            else if(clickedSecond == 1)
                 iv_12.setImageResource(R.drawable.cross);
-            if(clickedSecond == 2)
+            else if(clickedSecond == 2)
                 iv_13.setImageResource(R.drawable.cross);
-            if(clickedSecond == 3)
+            else if(clickedSecond == 3)
                 iv_14.setImageResource(R.drawable.cross);
-            if(clickedSecond == 4)
+            else if(clickedSecond == 4)
                 iv_21.setImageResource(R.drawable.cross);
-            if(clickedSecond == 5)
+            else if(clickedSecond == 5)
                 iv_22.setImageResource(R.drawable.cross);
-            if(clickedSecond == 6)
+            else if(clickedSecond == 6)
                 iv_23.setImageResource(R.drawable.cross);
-            if(clickedSecond == 7)
+            else if(clickedSecond == 7)
                 iv_24.setImageResource(R.drawable.cross);
-            if(clickedSecond == 8)
+            else if(clickedSecond == 8)
                 iv_31.setImageResource(R.drawable.cross);
-            if(clickedSecond == 9)
+            else if(clickedSecond == 9)
                 iv_32.setImageResource(R.drawable.cross);
-            if(clickedSecond == 10)
+            else if(clickedSecond == 10)
                 iv_33.setImageResource(R.drawable.cross);
-            if(clickedSecond == 11)
+            else if(clickedSecond == 11)
                 iv_34.setImageResource(R.drawable.cross);
 
-
-
         }
+
+
+          //unlock first card that was selected
+        if(clickedFirst == 0)
+            iv_11.setEnabled(true);
+        else if(clickedFirst == 1)
+            iv_12.setEnabled(true);
+        else if(clickedFirst == 2)
+            iv_13.setEnabled(true);
+        else if(clickedFirst == 3)
+            iv_14.setEnabled(true);
+        else if(clickedFirst == 4)
+            iv_21.setEnabled(true);
+        else if(clickedFirst == 5)
+            iv_22.setEnabled(true);
+        else if(clickedFirst == 6)
+            iv_23.setEnabled(true);
+        else if(clickedFirst == 7)
+            iv_24.setEnabled(true);
+        else if(clickedFirst == 8)
+            iv_31.setEnabled(true);
+        else if(clickedFirst == 9)
+            iv_32.setEnabled(true);
+        else if(clickedFirst == 10)
+            iv_33.setEnabled(true);
+        else if(clickedFirst == 11)
+            iv_34.setEnabled(true);
+
+
+
         iv_11.setEnabled(true);
         iv_12.setEnabled(true);
         iv_13.setEnabled(true);
@@ -354,21 +397,37 @@ public class GameActivity extends AppCompatActivity {
         iv_33.setEnabled(true);
         iv_34.setEnabled(true);
 
-        if(firstCard == secondCard) {
-            if(clickedFirst == 0)
+        //Store all matched cards
+
+        //Reset all not matched cards to true
+
+
+        for(Integer i : matchedCards) {
+            if(i == 0)
                 iv_11.setEnabled(false);
-
-
+            else if(i == 1)
+                iv_12.setEnabled(false);
+            else if(i == 2)
+                iv_13.setEnabled(false);
+            else if(i == 3)
+                iv_14.setEnabled(false);
+            else if(i == 4)
+                iv_21.setEnabled(false);
+            else if(i == 5)
+                iv_22.setEnabled(false);
+            else if(i == 6)
+                iv_23.setEnabled(false);
+            else if(i == 7)
+                iv_24.setEnabled(false);
+            else if(i == 8)
+                iv_31.setEnabled(false);
+            else if(i == 9)
+                iv_32.setEnabled(false);
+            else if(i == 10)
+                iv_33.setEnabled(false);
+            else if(i == 11)
+                iv_34.setEnabled(false);
         }
-
-
-
-
-
-
-
-
-
         //check if game is over
         checkEnd();
 
