@@ -50,18 +50,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Drawable[] images = new Drawable[] {
-                getDrawable(R.drawable.apple_10_resized), getDrawable(R.drawable.apple_11_resized),
-                getDrawable(R.drawable.apple_12_resized), getDrawable(R.drawable.apple_13_resized),
-                getDrawable(R.drawable.apple_17_resized), getDrawable(R.drawable.apple_18_resized),
-                getDrawable(R.drawable.apple_19_resized), getDrawable(R.drawable.apple_1_resized),
-                getDrawable(R.drawable.apple_20_resized), getDrawable(R.drawable.apple_21_resized),
-                getDrawable(R.drawable.apple_25_resized), getDrawable(R.drawable.apple_26_resized),
-                getDrawable(R.drawable.apple_27_resized), getDrawable(R.drawable.apple_28_resized),
-                getDrawable(R.drawable.apple_29_resized), getDrawable(R.drawable.apple_2_resized),
-                getDrawable(R.drawable.apple_3_resized), getDrawable(R.drawable.apple_4_resized),
-                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized)
-        };
+//        Drawable[] images = new Drawable[] {
+//                getDrawable(R.drawable.apple_10_resized), getDrawable(R.drawable.apple_11_resized),
+//                getDrawable(R.drawable.apple_12_resized), getDrawable(R.drawable.apple_13_resized),
+//                getDrawable(R.drawable.apple_17_resized), getDrawable(R.drawable.apple_18_resized),
+//                getDrawable(R.drawable.apple_19_resized), getDrawable(R.drawable.apple_1_resized),
+//                getDrawable(R.drawable.apple_20_resized), getDrawable(R.drawable.apple_21_resized),
+//                getDrawable(R.drawable.apple_25_resized), getDrawable(R.drawable.apple_26_resized),
+//                getDrawable(R.drawable.apple_27_resized), getDrawable(R.drawable.apple_28_resized),
+//                getDrawable(R.drawable.apple_29_resized), getDrawable(R.drawable.apple_2_resized),
+//                getDrawable(R.drawable.apple_3_resized), getDrawable(R.drawable.apple_4_resized),
+//                getDrawable(R.drawable.apple_5_resized), getDrawable(R.drawable.apple_9_resized)
+//        };
 
 //        LinearLayout layout = (LinearLayout) findViewById(R.id.parentLayout);
 //

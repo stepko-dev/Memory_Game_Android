@@ -1,34 +1,184 @@
-<?xml version="1.0" encoding="utf-8"?>
- <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameActivity">
+    android:padding="5dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <include
-        layout="@layout/images"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/tv_p1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="P1: 0"
-        android:textSize="32dp"
-        android:layout_alignParentStart="true"/>
+<!--        <TextView-->
+<!--            android:id="@+id/matchResult"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_marginRight="3dp"-->
+<!--            android:paddingRight="6dp"-->
+<!--            android:textSize="20sp"-->
+<!--            android:hint="Matches"/>-->
 
-    <TextView
-        android:id="@+id/tv_p2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="P2: 0"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textSize="32dp"/>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_p1"
+            android:layout_marginTop="30dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="3dp"
+            android:paddingRight="6dp"
+            android:textSize="20sp"
+            android:text="0 out of 6 matches" />
+
+
+
+        <Chronometer
+            android:id="@+id/timer"
+            android:textSize="20sp"
+            android:gravity="right"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.25"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_11"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_12"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_13"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+
+                android:src="@drawable/cross" />
+
+
+
+
+
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_14"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_21"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_22"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_23"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_24"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_31"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_32"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_33"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+            <ImageView
+                android:id="@+id/iv_34"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/cross" />
+
+        </TableRow>
+
+    </TableLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        />
+
+
+</LinearLayout>

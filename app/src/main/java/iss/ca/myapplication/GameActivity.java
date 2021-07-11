@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +19,7 @@ import java.util.Collections;
 
 public class GameActivity extends AppCompatActivity {
 
-    TextView tv_p1, tv_p2;
+    TextView tv_p1;
 
     ImageView iv_11, iv_12, iv_13, iv_14, iv_21, iv_22, iv_23, iv_24, iv_31, iv_32, iv_33, iv_34;
 
@@ -32,16 +34,18 @@ public class GameActivity extends AppCompatActivity {
     int clickedFirst, clickedSecond;
     int cardNumber = 1;
 
-    int turn = 1;
-    int playerPoints = 0, cpuPoints = 0;
+    int playerPoints = 0;
+    private Chronometer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+
+        timerStart();
+
         tv_p1 = (TextView) findViewById(R.id.tv_p1);
-        tv_p2 = (TextView) findViewById(R.id.tv_p2);
 
         iv_11 = (ImageView) findViewById(R.id.iv_11);
         iv_12 = (ImageView) findViewById(R.id.iv_12);
@@ -75,8 +79,6 @@ public class GameActivity extends AppCompatActivity {
         //shuffle the images
         Collections.shuffle(Arrays.asList(cardsArray));
 
-        //changing the color of the second player (inactive)
-        tv_p2.setTextColor(Color.GRAY);
 
         iv_11.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +177,18 @@ public class GameActivity extends AppCompatActivity {
         });
 
     }
+    public void timerStart(){
+        timer = findViewById(R.id.timer);
+        timer.setBase(SystemClock.elapsedRealtime());
+        timer.start();
+    }
 
+    public void timerStop(){
+        timer = findViewById(R.id.chronometer);
+        timer.stop();
+    }
+
+    // Here use tag set in imageView to get image correctly
     private void doStuff(ImageView iv,int card) {
         //set the correct image to the imageview
         if(cardsArray[card] == 101) {
@@ -304,39 +317,26 @@ public class GameActivity extends AppCompatActivity {
             }
 
 
-            //add points to the correct player
-            if (turn == 1) {
+
                 playerPoints++;
-                tv_p1.setText("P1: " + playerPoints);
-            } else if (turn == 2) {
-                cpuPoints++;
-                tv_p2.setText("P2:" + cpuPoints);
-            }
-        } else {
-            iv_11.setImageResource(R.drawable.ic_back);
-            iv_12.setImageResource(R.drawable.ic_back);
-            iv_13.setImageResource(R.drawable.ic_back);
-            iv_14.setImageResource(R.drawable.ic_back);
-            iv_21.setImageResource(R.drawable.ic_back);
-            iv_22.setImageResource(R.drawable.ic_back);
-            iv_23.setImageResource(R.drawable.ic_back);
-            iv_24.setImageResource(R.drawable.ic_back);
-            iv_31.setImageResource(R.drawable.ic_back);
-            iv_32.setImageResource(R.drawable.ic_back);
-            iv_33.setImageResource(R.drawable.ic_back);
-            iv_34.setImageResource(R.drawable.ic_back);
+                tv_p1.setText(playerPoints + " out of 6 matches");
+
+        }
+        else {
+            iv_11.setImageResource(R.drawable.cross);
+            iv_12.setImageResource(R.drawable.cross);
+            iv_13.setImageResource(R.drawable.cross);
+            iv_14.setImageResource(R.drawable.cross);
+            iv_21.setImageResource(R.drawable.cross);
+            iv_22.setImageResource(R.drawable.cross);
+            iv_23.setImageResource(R.drawable.cross);
+            iv_24.setImageResource(R.drawable.cross);
+            iv_31.setImageResource(R.drawable.cross);
+            iv_32.setImageResource(R.drawable.cross);
+            iv_33.setImageResource(R.drawable.cross);
+            iv_34.setImageResource(R.drawable.cross);
 
 
-            //change the player turn
-            if(turn ==1) {
-                turn = 2;
-                tv_p1.setTextColor(Color.GRAY);
-                tv_p2.setTextColor(Color.BLACK);
-            } else if (turn ==2) {
-                turn = 1;
-                tv_p2.setTextColor(Color.GRAY);
-                tv_p1.setTextColor(Color.BLACK);
-            }
         }
         iv_11.setEnabled(true);
         iv_12.setEnabled(true);
@@ -371,13 +371,14 @@ public class GameActivity extends AppCompatActivity {
                 iv_34.getVisibility() == View.INVISIBLE) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
             alertDialogBuilder
-                    .setMessage("Game Over!\nP1: " + playerPoints + "\nP2: " + cpuPoints)
+                    .setMessage("Game Over!\nP1: " + playerPoints)
                     .setCancelable(false)
                     .setPositiveButton("NEW", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                             startActivity(intent);
+//                            timerStop();
                             finish();
                         }
                     })
