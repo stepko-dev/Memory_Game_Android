@@ -47,6 +47,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     Button mSearchBtn;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     File mTargetFile;
 //    int counter = 0;
 
-    List<String> listImages = new ArrayList<>();
+    List<String> urls = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         mSearchBtn = (Button) findViewById(R.id.searchBtn);
 
-//        String filePath = "SampleFolder";
-//        String fileName = "SampleFile.jpg";
-//        mTargetFile = new File(getFilesDir(), filePath + "/" + fileName);
 
 
         Spinner spinner = (Spinner) findViewById(R.id.search);
@@ -79,11 +78,14 @@ public class MainActivity extends AppCompatActivity {
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = spinner.getSelectedItem().toString();
+                String selectedUrl = spinner.getSelectedItem().toString();
 
-                listImages.clear();
+                urls.clear();
+                startDownloadingHTML(selectedUrl);
+
+
                 initImages();
-                new  retrieveImgUrl().execute(url);
+                //new  retrieveImgUrl().execute(selectedUrl);
 
 //                initImages();
                 deleteAllFiles();
@@ -105,208 +107,179 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Custom method to convert string to url
-    protected URL stringToURL(String urlString){
-        try{
-            URL url = new URL(urlString);
-            return url;
-        }catch(MalformedURLException e){
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    protected URL stringToURL(String urlString){
+//        try{
+//            URL url = new URL(urlString);
+//            return url;
+//        }catch(MalformedURLException e){
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
-    private class retrieveImgUrl extends AsyncTask<String,Void, List<String>>{
+   // private class retrieveImgUrl extends AsyncTask<String,Void, List<String>>{
 
-        @Override
-        protected List<String> doInBackground(String... strings){
-            try {
-                org.jsoup.nodes.Document document = Jsoup.connect(strings[0]).get();
-                org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
-                int count = 0;
-                for(org.jsoup.nodes.Element link : links) {
-                    count++;
-                    if(count<21){
-                        String linkHref = link.getElementsByTag("img").attr("src");
-                        listImages.add(linkHref);
-                    }
-                    else{
-                        return listImages;
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-
-        protected void onPostExecute(List<String>result){
-            //super.onPostExecute(result);
-
-            for(String imgUrls : result) {
-                mMyTask = new theurlgrabber().execute(stringToURL(imgUrls));
-            }
-        }
+//        @Override
+//        protected List<String> doInBackground(String... strings){
+//            try {
+//                org.jsoup.nodes.Document document = Jsoup.connect(strings[0]).get();
+//                org.jsoup.select.Elements links = document.getElementsByClass("photo-grid-preview");
+//                int count = 0;
+//                for(org.jsoup.nodes.Element link : links) {
+//                    count++;
+//                    if(count<21){
+//                        String linkHref = link.getElementsByTag("img").attr("src");
+//                        listImages.add(linkHref);
+//                    }
+//                    else{
+//                        return listImages;
+//                    }
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
 
 
-    }
-
-    private class theurlgrabber  extends AsyncTask<URL, Void, Bitmap> {
-        // String url = "https://stocksnap.io/search/business";
-        String url;
-        Random random = new Random();
-        Integer pic = random.nextInt(20);
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        protected void onProgressUpdate(Integer... progress){
-        }
-
-        @Override
-        protected Bitmap doInBackground(URL... urls) {
-            URL url = urls[0];
-            HttpURLConnection connection = null;
-
-            try{
-                // Initialize a new http url connection
-                connection = (HttpURLConnection) url.openConnection();
-
-                // Connect the http url connection
-                connection.connect();
-
-                // Get the input stream from http url connection
-                InputStream inputStream = connection.getInputStream();
-
-                /*
-                    BufferedInputStream
-                        A BufferedInputStream adds functionality to another input stream-namely,
-                        the ability to buffer the input and to support the mark and reset methods.
-                */
-                /*
-                    BufferedInputStream(InputStream in)
-                        Creates a BufferedInputStream and saves its argument,
-                        the input stream in, for later use.
-                */
-                // Initialize a new BufferedInputStream from InputStream
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-
-                /*
-                    decodeStream
-                        Bitmap decodeStream (InputStream is)
-                            Decode an input stream into a bitmap. If the input stream is null, or
-                            cannot be used to decode a bitmap, the function returns null. The stream's
-                            position will be where ever it was after the encoded data was read.
-
-                        Parameters
-                            is InputStream : The input stream that holds the raw data
-                                              to be decoded into a bitmap.
-                        Returns
-                            Bitmap : The decoded bitmap, or null if the image data could not be decoded.
-                */
-                // Convert BufferedInputStream to Bitmap object
-                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-                inputStream.close();
-                bufferedInputStream.close();
-                connection.disconnect();
-
-                // Return the downloaded bitmap
-                return bmp;
-
-            }catch(IOException e){
-                e.printStackTrace();
-            }finally{
-                // Disconnect the http url connection
-                connection.disconnect();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Bitmap result){
-            // if(result!=null){
-
-            ImageView imageView = null;
-            Bitmap tag;
-
-            // Save bitmap to internal storage
-            Uri imageInternalUri = saveImageToInternalStorage(result);
-
-            for(int i = 1; i <= 20; i++){
-                imageView = findViewById(Integer.valueOf(i));
-                tag =  (Bitmap)imageView.getTag(R.string.none);
-
-                // if x is not null means that image is a cross
-                if(tag == null){
-                    // Display the downloaded image into ImageView
-                    //imageView.setImageBitmap(result);
-                    Picasso.with(MainActivity.this).load(new File(imageInternalUri.getPath())).resize(270,270).into(imageView);
-                    // Set the ImageView image from internal storage
-                    //imageView.setImageURI(imageInternalUri);
-                    imageView.setTag(R.string.none,result); // means that image is not a cross
-
-                    mProgressBar = findViewById(Integer.valueOf(100));
-                    mProgressBar.setProgress(i);
-                    tv = findViewById(Integer.valueOf(101));
-                    tv.setGravity(Gravity.CENTER | Gravity.TOP);
-                    tv.setText("Downloading " + i + " of 20 images..." );
-                    break;
-                }
-            }
-            List<Bitmap> selectedImage = new ArrayList<>();
-            for(int i=1; i<=20; i++){
-                imageView = findViewById(Integer.valueOf(i));
-
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Bitmap bitMapFile = (Bitmap) v.getTag(R.string.none);
-                        if(selectedImage.size()<6) {
-                            v.setAlpha(0.2f);
-                            v.setEnabled(false);
-                            selectedImage.add(bitMapFile);
-                        }
-                        if(selectedImage.size() == 6){
-                            deleteRemainingFiles(selectedImage);
-                           Intent intent =  new Intent(MainActivity.this,SecondActivity.class);
-                           startActivity(intent);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    protected Uri saveImageToInternalStorage(Bitmap bitmap){
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        File directory = cw.getDir("image9Dir", Context.MODE_PRIVATE);
+//        protected void onPostExecute(List<String>result){
+//            //super.onPostExecute(result);
+//
+//            for(String imgUrls : result) {
+//                mMyTask = new theurlgrabber().execute(stringToURL(imgUrls));
+//            }
+//        }
 
 
-        File file = new File(directory,  bitmap.toString() + ".jpg");
-        //Bitmap bitmap = bitmaps.get(i);
+  //  }
 
+//    private class theurlgrabber  extends AsyncTask<URL, Void, Bitmap> {
+//        // String url = "https://stocksnap.io/search/business";
+//        String url;
+//        Random random = new Random();
+//        Integer pic = random.nextInt(20);
+//
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//        protected void onProgressUpdate(Integer... progress){
+//        }
+//
+//        @Override
+//        protected Bitmap doInBackground(URL... urls) {
+//            URL url = urls[0];
+//            HttpURLConnection connection = null;
+//
+//            try{
+//                // Initialize a new http url connection
+//                connection = (HttpURLConnection) url.openConnection();
+//
+//                // Connect the http url connection
+//                connection.connect();
+//
+//                // Get the input stream from http url connection
+//                InputStream inputStream = connection.getInputStream();
+//
+//                /*
+//                    BufferedInputStream
+//                        A BufferedInputStream adds functionality to another input stream-namely,
+//                        the ability to buffer the input and to support the mark and reset methods.
+//                */
+//                /*
+//                    BufferedInputStream(InputStream in)
+//                        Creates a BufferedInputStream and saves its argument,
+//                        the input stream in, for later use.
+//                */
+//                // Initialize a new BufferedInputStream from InputStream
+//                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+//
+//                /*
+//                    decodeStream
+//                        Bitmap decodeStream (InputStream is)
+//                            Decode an input stream into a bitmap. If the input stream is null, or
+//                            cannot be used to decode a bitmap, the function returns null. The stream's
+//                            position will be where ever it was after the encoded data was read.
+//
+//                        Parameters
+//                            is InputStream : The input stream that holds the raw data
+//                                              to be decoded into a bitmap.
+//                        Returns
+//                            Bitmap : The decoded bitmap, or null if the image data could not be decoded.
+//                */
+//                // Convert BufferedInputStream to Bitmap object
+//                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+//                inputStream.close();
+//                bufferedInputStream.close();
+//                connection.disconnect();
+//
+//                // Return the downloaded bitmap
+//                return bmp;
+//
+//            }catch(IOException e){
+//                e.printStackTrace();
+//            }finally{
+//                // Disconnect the http url connection
+//                connection.disconnect();
+//            }
+//            return null;
+//        }
+//
+//        protected void onPostExecute(Bitmap result){
+//            // if(result!=null){
+//
+//            ImageView imageView = null;
+//            Bitmap tag;
+//
+//            // Save bitmap to internal storage
+//            Uri imageInternalUri = saveImageToInternalStorage(result);
+//
+//            for(int i = 1; i <= 20; i++){
+//                imageView = findViewById(Integer.valueOf(i));
+//                tag =  (Bitmap)imageView.getTag(R.string.none);
+//
+//                // if x is not null means that image is a cross
+//                if(tag == null){
+//                    // Display the downloaded image into ImageView
+//                    //imageView.setImageBitmap(result);
+//                    Picasso.with(MainActivity.this).load(new File(imageInternalUri.getPath())).resize(270,270).into(imageView);
+//                    // Set the ImageView image from internal storage
+//                    //imageView.setImageURI(imageInternalUri);
+//                    imageView.setTag(R.string.none,result); // means that image is not a cross
+//
+//                    mProgressBar = findViewById(Integer.valueOf(100));
+//                    mProgressBar.setProgress(i);
+//                    tv = findViewById(Integer.valueOf(101));
+//                    tv.setGravity(Gravity.CENTER | Gravity.TOP);
+//                    tv.setText("Downloading " + i + " of 20 images..." );
+//                    break;
+//                }
+//            }
+//            List<Bitmap> selectedImage = new ArrayList<>();
+//            for(int i=1; i<=20; i++){
+//                imageView = findViewById(Integer.valueOf(i));
+//
+//                imageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        final Bitmap bitMapFile = (Bitmap) v.getTag(R.string.none);
+//                        if(selectedImage.size()<6) {
+//                            v.setAlpha(0.2f);
+//                            v.setEnabled(false);
+//                            selectedImage.add(bitMapFile);
+//                        }
+//                        if(selectedImage.size() == 6){
+//                            deleteRemainingFiles(selectedImage);
+//                           Intent intent =  new Intent(MainActivity.this,SecondActivity.class);
+//                           startActivity(intent);
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//    }
 
-
-
-        if (!file.exists()) {
-//            Log.d("path", file.toString());
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-            }
-        }
-        // Parse the gallery image url to uri
-        Uri savedImageURI = Uri.parse(file.getAbsolutePath());
-
-        // Return the saved image Uri
-        return savedImageURI;
-    }
 
     protected void initImages() {
         LinearLayout parent = (LinearLayout) findViewById(R.id.parentLayout);
@@ -422,5 +395,73 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    protected void startDownloadingHTML(String link) {
+        String destFilename = "htmlFile";
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        File dir = cw.getDir("html", Context.MODE_PRIVATE);
+        File destFile = new File(dir, destFilename + ".txt");
+
+        // creating a background thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HTMLDownloader htmlDL = new HTMLDownloader();
+                if (htmlDL.downloadHTML(link, destFile)) {
+                    File html = dir.listFiles()[0];
+                    Scanner scannedFile;
+                    try {
+                        scannedFile = new Scanner(html);
+                        while (scannedFile.hasNext()) {
+                            String word = scannedFile.next();
+                            if (word.contains("data-cfsrc=" + '"' + "https://cdn.stocksnap.io/img-thumbs")) {
+                                word = word.replaceAll("data-cfsrc=", "");
+                                word = word.replace('"', ' ').trim();
+                                System.out.println("Found: " + word);
+                                urls.add(word);
+                                if(urls.size()<=20){
+                                    startDownloadImage(word,urls.size());
+                                }
+                                else{
+                                    break;
+                                }
+
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+    }
+    protected void startDownloadImage(String imgURL, int id) {
+
+        String destFilename =  imgURL.substring(imgURL.lastIndexOf("/")+1 );
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        File dir = cw.getDir("image9Dir", Context.MODE_PRIVATE);
+        File destFile = new File(dir, destFilename );
+
+        // creating a background thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ImageDownloader imgDL = new ImageDownloader();
+                if (imgDL.downloadImage(imgURL, destFile)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
+                            ImageView imageView = findViewById(Integer.valueOf(id));
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+
 
 }
