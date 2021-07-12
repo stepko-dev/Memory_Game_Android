@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -28,6 +29,7 @@ public class GameActivity extends AppCompatActivity {
     TextView tv_p1;
 
     ImageView iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12;
+    ImageView[] IMGS = {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12};
 
 
     //array for the images
@@ -52,21 +54,12 @@ public class GameActivity extends AppCompatActivity {
 
         timerStart();
 
-        tv_p1 = (TextView) findViewById(R.id.tv_p1);
+        tv_p1 = findViewById(R.id.tv_p1);
 
-        iv_1 = (ImageView) findViewById(R.id.iv_1);
-        iv_2 = (ImageView) findViewById(R.id.iv_2);
-        iv_3 = (ImageView) findViewById(R.id.iv_3);
-        iv_4 = (ImageView) findViewById(R.id.iv_4);
-        iv_5 = (ImageView) findViewById(R.id.iv_5);
-        iv_6 = (ImageView) findViewById(R.id.iv_6);
-        iv_7 = (ImageView) findViewById(R.id.iv_7);
-        iv_8 = (ImageView) findViewById(R.id.iv_8);
-        iv_9 = (ImageView) findViewById(R.id.iv_9);
-        iv_10 = (ImageView) findViewById(R.id.iv_10);
-        iv_11 = (ImageView) findViewById(R.id.iv_11);
-        iv_12 = (ImageView) findViewById(R.id.iv_12);
-
+        for (int i = 1; i < 13; i++) {
+            int id = getResources().getIdentifier("iv_"+String.valueOf(i),"id", getPackageName());
+            IMGS[i-1] = findViewById(id);
+        }
 
         //find all pictures
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
