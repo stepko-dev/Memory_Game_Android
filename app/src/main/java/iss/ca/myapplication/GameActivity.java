@@ -134,6 +134,15 @@ public class GameActivity extends AppCompatActivity {
                 findViewById(id).setEnabled(false);
             }
 
+            //if match, play success sound
+            if(firstCard == secondCard) {
+                if (playerPoints < 6) {
+                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_bell);
+                    mp.start();
+                }
+            }
+
+
             //Using thread to delay execution so second card is not closed immediately
             new Thread(new Runnable() {
                 @Override
@@ -163,11 +172,7 @@ public class GameActivity extends AppCompatActivity {
         if(firstCard == secondCard) {
                 playerPoints++;
                 tv_p1.setText(playerPoints + " out of 6 matches");
-                if(playerPoints < 6)
-                {
-                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_bell);
-                    mp.start();
-                }
+
                 //add matched cards(positions) to list
                 matchedCards.add(clickedFirst);
                 matchedCards.add(clickedSecond);
