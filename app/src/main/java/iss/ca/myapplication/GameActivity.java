@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -45,13 +46,10 @@ public class GameActivity extends AppCompatActivity {
     List<Integer> matchedCards = new ArrayList<>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
-
         timerStart();
 
         tv_p1 = findViewById(R.id.tv_p1);
@@ -165,14 +163,17 @@ public class GameActivity extends AppCompatActivity {
         if(firstCard == secondCard) {
                 playerPoints++;
                 tv_p1.setText(playerPoints + " out of 6 matches");
-
+                if(playerPoints < 6)
+                {
+                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_bell);
+                    mp.start();
+                }
                 //add matched cards(positions) to list
                 matchedCards.add(clickedFirst);
                 matchedCards.add(clickedSecond);
 
         }
         else {
-
             for (int i = 1; i < 13; i++) {
                 if(clickedFirst == i - 1 || clickedSecond == i - 1) {
                     int id = getResources().getIdentifier("iv_" + i, "id", getPackageName());
@@ -189,6 +190,8 @@ public class GameActivity extends AppCompatActivity {
             findViewById(id).setEnabled(true);
         }
 
+
+//        mp.start();
         //check if game is over
         checkEnd();
 
@@ -196,10 +199,12 @@ public class GameActivity extends AppCompatActivity {
 
     private void checkEnd() {
         if(playerPoints == 6) {
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_jingle);
+            mp.start();
             timerStop();
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
             alertDialogBuilder
-                    .setMessage("Game Over!\nP1: " + playerPoints)
+                    .setMessage("Game Over!\nWell Done!")
                     .setCancelable(false)
                     .setPositiveButton("NEW", new DialogInterface.OnClickListener() {
                         @Override
@@ -220,3 +225,5 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 }
+
+
