@@ -1,19 +1,26 @@
 package iss.ca.myapplication;
 
+import android.renderscript.ScriptGroup;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class HTMLDownloader {
-    protected boolean downloadHTML(String link, File destFile) {
+
+    private InputStream in;
+    private FileOutputStream out;
+
+    protected boolean downloadHTML(String link, File destFile) throws IOException {
         try{
             URL url = new URL(link);
             URLConnection conn = url.openConnection();
 
-            InputStream in = conn.getInputStream();
-            FileOutputStream out = new FileOutputStream(destFile);
+            in = conn.getInputStream();
+            out = new FileOutputStream(destFile);
 
             byte[] buf = new byte[1024];
             int bytesRead = -1;
@@ -21,12 +28,22 @@ public class HTMLDownloader {
                 out.write(buf, 0, bytesRead);
             }
 
-            out.close();
-            in.close();
+
             return true;
         } catch (Exception e) {
             return false;
         }
+        finally {
+            if(out != null)
+                out.close();
+            if(in != null)
+                in.close();
+        }
     }
+
+//    protected void stopHtmlDownload() throws IOException {
+//        in.close();
+//        out.close();
+//    }
 
 }

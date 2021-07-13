@@ -5,23 +5,30 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.renderscript.ScriptGroup;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class ImageDownloader {
-    protected boolean downloadImage(String imgURL, File destFile) {
+
+    private InputStream in;
+    private FileOutputStream out;
+    private FileOutputStream fos;
+
+    protected boolean downloadImage(String imgURL, File destFile) throws IOException {
         try{
             URL url = new URL(imgURL);
             URLConnection conn = url.openConnection();
 
-            InputStream in = conn.getInputStream();
-            FileOutputStream out = new FileOutputStream(destFile);
+            in = conn.getInputStream();
+            out = new FileOutputStream(destFile);
 
             byte[] buf = new byte[1024];
             int bytesRead = -1;
@@ -31,17 +38,20 @@ public class ImageDownloader {
             Bitmap bitmap = BitmapFactory.decodeFile(destFile.getAbsolutePath());
             resizeAndSaveImage(bitmap,destFile);
 
-
-            out.close();
-            in.close();
             return true;
         } catch (Exception e) {
             return false;
         }
+        finally{
+            if(out != null)
+                out.close();
+            if(in != null)
+                in.close();
+        }
     }
 
 
-    protected void resizeAndSaveImage(Bitmap bitmap, File input){
+    protected void resizeAndSaveImage(Bitmap bitmap, File input) throws IOException {
         // delete existing file
         if(input.exists()){
             input.delete();
@@ -49,7 +59,6 @@ public class ImageDownloader {
 
         // resize the file and store in the internal storage
         if (!input.exists()) {
-            FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(input);
                ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -58,13 +67,21 @@ public class ImageDownloader {
                  byte[] byteArray = stream.toByteArray();
                 fos.write(byteArray);
                 fos.flush();
-                fos.close();
             } catch (java.io.IOException e) {
                 e.printStackTrace();
+            }
+            finally {
+                if(fos != null)
+                    fos.close();
             }
         }
 
     }
 
+//    protected void stopImgDownload() throws IOException {
+//        in.close();
+//        out.close();
+//        fos.close();
+//    }
 
 }
