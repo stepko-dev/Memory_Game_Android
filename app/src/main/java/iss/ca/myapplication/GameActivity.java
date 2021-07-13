@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -28,6 +27,7 @@ import java.util.List;
 public class GameActivity extends AppCompatActivity {
 
     TextView tv_p1;
+
 
     ImageView iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12;
     ImageView[] IMGS = {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12};
@@ -55,7 +55,7 @@ public class GameActivity extends AppCompatActivity {
         tv_p1 = findViewById(R.id.tv_p1);
 
         for (int i = 1; i < 13; i++) {
-            int id = getResources().getIdentifier("iv_"+String.valueOf(i),"id", getPackageName());
+            int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             IMGS[i-1] = findViewById(id);
         }
 
@@ -82,7 +82,7 @@ public class GameActivity extends AppCompatActivity {
 
 
         for(int i = 1; i<=12; i++) {
-            int id = getResources().getIdentifier("iv_"+String.valueOf(i),"id", getPackageName());
+            int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             ImageView iv = findViewById(id);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,7 +130,7 @@ public class GameActivity extends AppCompatActivity {
 
             //disable all cards
             for(int i = 1; i<=12; i++) {
-                int id = getResources().getIdentifier("iv_"+String.valueOf(i),"id", getPackageName());
+                int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
                 findViewById(id).setEnabled(false);
             }
 
@@ -138,6 +138,16 @@ public class GameActivity extends AppCompatActivity {
             if(firstCard == secondCard) {
                 if (playerPoints < 6) {
                     MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_bell);
+                    mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mp.stop();
+                            mp.reset();
+                            mp.release();
+                        }
+
+                    });
                     mp.start();
                 }
             }
@@ -151,7 +161,7 @@ public class GameActivity extends AppCompatActivity {
                         Thread.sleep(700);
                     }
                     catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                     runOnUiThread(new Runnable() {
                         @Override
@@ -190,7 +200,7 @@ public class GameActivity extends AppCompatActivity {
 
         //set all cards that are not matched yet to true so they can be selected
         for(int i = 1; i<=12; i++) {
-            int id = getResources().getIdentifier("iv_"+String.valueOf(i),"id", getPackageName());
+            int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             if(!matchedCards.contains(i-1))
             findViewById(id).setEnabled(true);
         }
@@ -205,6 +215,16 @@ public class GameActivity extends AppCompatActivity {
     private void checkEnd() {
         if(playerPoints == 6) {
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_jingle);
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.stop();
+                    mp.reset();
+                    mp.release();
+                }
+
+            });
             mp.start();
             timerStop();
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
