@@ -1,20 +1,13 @@
 package iss.ca.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -28,35 +21,19 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 
-import org.jsoup.Jsoup;
-import org.w3c.dom.Document;
-
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     Button mSearchBtn;
     ProgressBar mProgressBar;
     TextView tv;
-    private AsyncTask mMyTask;
-    List<Bitmap> bitmaplist = new ArrayList<>();
-    File mTargetFile;
     boolean finishedDl = false;
     String selectedUrl = null;
     private Thread dlThread;
@@ -70,11 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mSearchBtn = (Button) findViewById(R.id.searchBtn);
-
         Spinner spinner = (Spinner) findViewById(R.id.search);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.pics_array, android.R.layout.simple_spinner_item);
 
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +73,12 @@ public class MainActivity extends AppCompatActivity {
                     startDownloadingHTML(selectedUrl);
                 }
                 initImages();
+
             }
         });
+
+
+
     }
 
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
@@ -147,8 +124,6 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setId(i * 4 + j + 1);
                 imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable) getDrawable(R.drawable.image)).getBitmap(), 100, true)));
                 imageView.setTag(R.string.none, null);
-                //imageView.setTag(R.drawable.image);
-                // Picasso.with(MainActivity.this).load("drawable//" + R.drawable.image).resize(270,270).into(imageView);
                 imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
                 row.addView(imageView);
             }
@@ -175,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     public void deleteAllFiles() {
 
         try {
-            File directory = getDir("image9Dir", Context.MODE_PRIVATE);
+            File directory = getDir(getString(R.string.folder), Context.MODE_PRIVATE);
             if (directory.exists()) {
                 for (File child : directory.listFiles()) {
                     child.delete();
@@ -188,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteRemainingFiles(List<Bitmap> bitmapList) {
-        File directory = getDir("image9Dir", Context.MODE_PRIVATE);
+        File directory = getDir(getString(R.string.folder), Context.MODE_PRIVATE);
 
         List<File> fileList = new ArrayList<File>();
         if (directory.exists()) {
@@ -229,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File dir = cw.getDir("html", Context.MODE_PRIVATE);
         File destFile = new File(dir, destFilename + ".txt");
+        List<Bitmap> selectedImage = new ArrayList<>();
 
         // creating a background thread
         dlThread = new Thread(new Runnable() {
@@ -246,12 +222,11 @@ public class MainActivity extends AppCompatActivity {
                                 if (word.contains("data-cfsrc=" + '"' + "https://cdn.stocksnap.io/img-thumbs")) {
                                     word = word.replaceAll("data-cfsrc=", "");
                                     word = word.replace('"', ' ').trim();
-                                    System.out.println("Found: " + word);
                                     urls.add(word);
                                     if (urls.size() <= 20) {
                                         String destFilename = word.substring(word.lastIndexOf("/") + 1);
                                         ContextWrapper cw = new ContextWrapper(getApplicationContext());
-                                        File dir = cw.getDir("image9Dir", Context.MODE_PRIVATE);
+                                        File dir = cw.getDir(getString(R.string.folder), Context.MODE_PRIVATE);
                                         File destFile = new File(dir, destFilename);
                                         ImageDownloader imgDL = new ImageDownloader();
                                         if(interrupted)
@@ -270,11 +245,30 @@ public class MainActivity extends AppCompatActivity {
                                                     @Override
                                                     public void run() {
                                                         imageView.setImageBitmap(bitmap);
+                                                        imageView.setTag(R.string.none,bitmap);
                                                         mProgressBar = findViewById(Integer.valueOf(100));
                                                         mProgressBar.setProgress(dir.list().length);
                                                         tv = findViewById(Integer.valueOf(101));
                                                         tv.setGravity(Gravity.CENTER | Gravity.TOP);
                                                         tv.setText("Downloading " + dir.list().length + " of 20 images..." );
+
+
+                                                        imageView.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                final Bitmap bitMapFile = (Bitmap) v.getTag(R.string.none);
+                                                                if (selectedImage.size() < 6) {
+                                                                    v.setAlpha(0.2f);
+                                                                    v.setEnabled(false);
+                                                                    selectedImage.add(bitMapFile);
+                                                                }
+                                                                if (selectedImage.size() == 6) {
+                                                                    deleteRemainingFiles(selectedImage);
+                                                                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                                                                    startActivity(intent);
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }

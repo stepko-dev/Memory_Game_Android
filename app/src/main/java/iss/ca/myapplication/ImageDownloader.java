@@ -78,10 +78,6 @@ public class ImageDownloader {
 
     }
 
-//    protected void stopImgDownload() throws IOException {
-//        in.close();
-//        out.close();
-//        fos.close();
-//    }
+
 
 }

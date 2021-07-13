@@ -41,9 +41,5 @@ public class HTMLDownloader {
         }
     }
 
-//    protected void stopHtmlDownload() throws IOException {
-//        in.close();
-//        out.close();
-//    }
 
 }
