@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     Button mSearchBtn;
     ProgressBar mProgressBar;
     TextView tv;
-    boolean finishedDl = false;
     String selectedUrl = null;
     private Thread dlThread;
     boolean interrupted = false;
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finishedDl = false;
                 selectedUrl = spinner.getSelectedItem().toString();
 
                 urls.clear();
@@ -169,9 +167,9 @@ public class MainActivity extends AppCompatActivity {
         if (directory.exists()) {
             for (File child : directory.listFiles()) {
                 for (Bitmap bm : bitmapList) {
-                    if (child.toString().contains(bm.toString())) {
+                    Bitmap childBM = BitmapFactory.decodeFile(child.getPath());
+                    if (childBM.sameAs(bm)) {
                         fileList.add(child);
-
                     }
                 }
             }
@@ -291,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         dlThread.start();
-        finishedDl = true;
     }
 
 }
