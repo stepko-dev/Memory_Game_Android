@@ -54,6 +54,7 @@ public class GameActivity extends AppCompatActivity {
 
         tv_p1 = findViewById(R.id.tv_p1);
 
+        // Get all imageView from layout and store them into IMGS Array
         for (int i = 1; i < 13; i++) {
             int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             IMGS[i-1] = findViewById(id);
@@ -72,15 +73,18 @@ public class GameActivity extends AppCompatActivity {
             });
         }
 
+        // Transfer all files to bitmap and store them into bitmap Array
         ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
         for(int i = 0; i < 6 ; i++) {
             bitmapArray.add(BitmapFactory.decodeFile(allFiles[i].getAbsolutePath()));
         }
 
+
         //shuffle the images
         Collections.shuffle(Arrays.asList(cardsArray));
 
 
+        // Set onClick listener to each image view then call play method inside the click listener
         for(int i = 1; i<=12; i++) {
             int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             ImageView iv = findViewById(id);
@@ -95,12 +99,14 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    //Generate timer start method
     public void timerStart(){
         timer = findViewById(R.id.timer);
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
     }
 
+    //Generate timer stop method
     public void timerStop(){
         timer = findViewById(R.id.timer);
         timer.stop();
@@ -176,9 +182,9 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    // Here check for match
     private void calculate(int clickedFirst, int clickedSecond) {
-        //if images are equal remove tgem and add points
-
+        //if images are equal add points store them in matchedCards list
         if(firstCard == secondCard) {
                 playerPoints++;
                 tv_p1.setText(playerPoints + " out of 6 matches");
@@ -188,6 +194,8 @@ public class GameActivity extends AppCompatActivity {
                 matchedCards.add(clickedSecond);
 
         }
+        // display placeholder image
+        //ie. rehide them
         else {
             for (int i = 1; i < 13; i++) {
                 if(clickedFirst == i - 1 || clickedSecond == i - 1) {
@@ -202,18 +210,20 @@ public class GameActivity extends AppCompatActivity {
         for(int i = 1; i<=12; i++) {
             int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             if(!matchedCards.contains(i-1))
-            findViewById(id).setEnabled(true);
+                findViewById(id).setEnabled(true);
         }
 
 
-//        mp.start();
+
         //check if game is over
         checkEnd();
 
     }
 
     private void checkEnd() {
+        // Game finish when player points reach 6
         if(playerPoints == 6) {
+            // play finish music
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_jingle);
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
@@ -226,7 +236,12 @@ public class GameActivity extends AppCompatActivity {
 
             });
             mp.start();
+
+            // stop timer
             timerStop();
+
+            // Display end of game pop-up
+            // User able to select play another round with current images or return Main Activity
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
             alertDialogBuilder
                     .setMessage("Game Over!\nWell Done!")
