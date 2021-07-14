@@ -21,6 +21,7 @@
             android:layout_weight="9"
             android:gravity="center_vertical"
             android:text="0 out of 6 matches"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             />
