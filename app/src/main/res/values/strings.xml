@@ -4,6 +4,11 @@
         <item>https://stocksnap.io/search/people</item>
         <item>https://stocksnap.io/search/beach</item>
         <item>https://stocksnap.io/search/nature</item>
+        <item>https://stocksnap.io/search/food</item>
+        <item>https://stocksnap.io/search/cat</item>
+        <item>https://stocksnap.io/search/coffee</item>
+        <item>https://stocksnap.io/search/car</item>
+        <item>https://stocksnap.io/search/galaxy</item>
     </string-array>
     <string name="none"></string>
     <string name="folder">images</string>

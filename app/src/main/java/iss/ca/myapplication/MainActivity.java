@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageView imageView = new ImageView(getApplicationContext());
                 imageView.setId(i * 4 + j + 1);
                 // scaleDown for resizing image so that it fits nicely
-                imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable) getDrawable(R.drawable.image)).getBitmap(), 100, true)));
+                imageView.setImageDrawable(new BitmapDrawable(getResources(), scaleDown(((BitmapDrawable) getDrawable(R.drawable.image)).getBitmap(), 98, true)));
                 imageView.setTag(R.string.none, null);
                 imageView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
                 row.addView(imageView);
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 if (selectedImage.size() == 6) {
                                                                     // Clear all images that were not selected from the internal storage
                                                                     deleteRemainingFiles(selectedImage);
-                                                                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                                                                    Intent intent = new Intent(MainActivity.this, GameActivity.class);
                                                                     startActivity(intent);
                                                                 }
                                                             }

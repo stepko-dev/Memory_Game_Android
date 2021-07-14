@@ -47,7 +47,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+      
         // Set layout per activity_game.xml
         setContentView(R.layout.activity_game);
 
@@ -275,5 +275,3 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 }
-
-
