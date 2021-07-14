@@ -25,15 +25,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
-
     TextView tv_p1;
 
-
+    // imageViews and array for iterating through them
     ImageView iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12;
-    ImageView[] IMGS = {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12};
+    ImageView[] imageViews = {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12};
 
-
-    //array for the images
+    // array for the image references
     Integer[] cardsArray = {101, 102, 103, 104, 105, 106, 201, 202, 203, 204, 205, 206,};
 
     int firstCard, secondCard;
@@ -43,105 +41,115 @@ public class GameActivity extends AppCompatActivity {
     int playerPoints = 0;
     private Chronometer timer;
 
+    // List to keep track of which cards have been matched (to exclude from being re-enabled/re-hidden)
     List<Integer> matchedCards = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
-        timerStart();
 
+        // Set layout per activity_game.xml
+        setContentView(R.layout.activity_game);
+
+        // Start timer and display player points
+        timerStart();
         tv_p1 = findViewById(R.id.tv_p1);
 
-        // Get all imageView from layout and store them into IMGS Array
+        // Get all imageViews from images.xml and store them into imageViews array
+        // At this stage they are all using the placeholder image
         for (int i = 1; i < 13; i++) {
             int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
-            IMGS[i-1] = findViewById(id);
+            imageViews[i-1] = findViewById(id);
         }
 
-        //find all pictures
+        // Find app_images folder and instantiate file and bitmap arrays
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File folder = new File(String.valueOf(cw.getDir("image9Dir", Context.MODE_PRIVATE)));
         File[] allFiles = new File[0];
+        ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
 
-        if(folder.exists()) {
+        // Extract all image files into allFiles array
+        if (folder.exists()) {
             allFiles = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"));
                 }
             });
+
+            if (allFiles!=null) {
+
+                // Decode each file in allFiles and add the resulting Bitmap to bitmapArray
+                for(int i = 0; i < 6 ; i++) {
+                    bitmapArray.add(BitmapFactory.decodeFile(allFiles[i].getAbsolutePath()));
+                }
+            }
         }
 
-        // Transfer all files to bitmap and store them into bitmap Array
-        ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
-        for(int i = 0; i < 6 ; i++) {
-            bitmapArray.add(BitmapFactory.decodeFile(allFiles[i].getAbsolutePath()));
-        }
-
-
-        //shuffle the images
+        // Shuffle the order of image references
         Collections.shuffle(Arrays.asList(cardsArray));
 
-
-        // Set onClick listener to each image view then call play method inside the click listener
-        for(int i = 1; i<=12; i++) {
+        // Call play() every time a card/imageView is clicked on
+        for (int i = 1; i<=12; i++) {
             int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             ImageView iv = findViewById(id);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int theCard = Integer.parseInt((String) view.getTag());
-                    play(iv, theCard, bitmapArray);
+
+                    // get index reference for cardsArray from imageView tags in images.xml
+                    int cardIdx = Integer.parseInt((String) view.getTag());
+                    play(iv, cardIdx, bitmapArray);
                 }
             });
         }
     }
 
 
-    //Generate timer start method
+    // Generate timer start method
     public void timerStart(){
         timer = findViewById(R.id.timer);
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
     }
 
-    //Generate timer stop method
+    // Generate timer stop method
     public void timerStop(){
         timer = findViewById(R.id.timer);
         timer.stop();
     }
 
-    // Here use tag set in imageView to get image correctly
-    private void play(ImageView iv, int card, ArrayList<Bitmap> bitmapArray) {
-        //set the correct image to the imageview
-        iv.setImageBitmap(bitmapArray.get(cardsArray[card]%100-1));
+    private void play(ImageView iv, int cardIdx, ArrayList<Bitmap> bitmapArray) {
+        // Assign and display the clicked card image
+        iv.setImageBitmap(bitmapArray.get(cardsArray[cardIdx]%100-1));
 
-        // check which image is selected and save it to temporary variable
-        if(cardNumber == 1) {
-            firstCard = cardsArray[card];
-            if(firstCard > 200) {
-                firstCard = firstCard - 100;
-            }
+        // Check whether the selected card is the first or second of the pair
+        if (cardNumber == 1) {
+            // If first, set cardNumber to 2 for next click
             cardNumber = 2;
-            clickedFirst = card;
+            // Store the image reference for match checking
+            firstCard = cardsArray[cardIdx];
+            // Store the clicked card tag for passing to calculate() method
+            clickedFirst = cardIdx;
+            // Disable the card from being clickable
             iv.setEnabled(false);
-        } else if(cardNumber == 2) {
-            secondCard = cardsArray[card];
-            if(secondCard> 200) {
-                secondCard = secondCard - 100;
-            }
+        }
+        else if (cardNumber == 2) {
+            // If second, set cardNumber to 1 for next click
             cardNumber = 1;
-            clickedSecond = card;
+            // Store the image reference for match checking
+            secondCard = cardsArray[cardIdx];
+            // Store the clicked card tag for passing to calculate() method
+            clickedSecond = cardIdx;
 
-            //disable all cards
-            for(int i = 1; i<=12; i++) {
+            // Disable all cards from being clickable
+            // This is to prevent fast players from clicking more than two cards during the calculation delay
+            for (int i = 1; i<=12; i++) {
                 int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
                 findViewById(id).setEnabled(false);
             }
 
-            //if match, play success sound
-            if(firstCard == secondCard) {
+            // Play success sound on match success, assuming it is not the match that ends the game
+            if (firstCard%100 == secondCard%100) {
                 if (playerPoints < 6) {
                     MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_bell);
                     mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -159,7 +167,8 @@ public class GameActivity extends AppCompatActivity {
             }
 
 
-            //Using thread to delay execution so second card is not closed immediately
+            // Using thread to delay second card from disappearing immediately
+            // So player has time to see and remember the second card
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -182,48 +191,52 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-    // Here check for match
+    // This method updates player points and re-hides unmatched cards
     private void calculate(int clickedFirst, int clickedSecond) {
-        //if images are equal add points store them in matchedCards list
-        if(firstCard == secondCard) {
+        // Match success
+        if (firstCard%100 == secondCard%100) {
+                // Add points and update the display
                 playerPoints++;
                 tv_p1.setText(playerPoints + " out of 6 matches");
 
-                //add matched cards(positions) to list
+                // Add card tags to matchedCards list to be excluded from below
                 matchedCards.add(clickedFirst);
                 matchedCards.add(clickedSecond);
 
         }
-        // display placeholder image
-        //ie. rehide them
+        // Match failure
+        // Hide the selected cards and display the placeholder
         else {
-            for (int i = 1; i < 13; i++) {
-                if(clickedFirst == i - 1 || clickedSecond == i - 1) {
-                    int id = getResources().getIdentifier("iv_" + i, "id", getPackageName());
-                    ImageView iv = findViewById(id);
-                    iv.setImageResource(R.drawable.cross);
-                }
-            }
+            int id = getResources().getIdentifier("iv_" + (clickedFirst+1), "id", getPackageName());
+            ImageView iv1 = findViewById(id);
+            iv1.setImageResource(R.drawable.cross);
+            id = getResources().getIdentifier("iv_" + (clickedSecond+1), "id", getPackageName());
+            ImageView iv2 = findViewById(id);
+            iv2.setImageResource(R.drawable.cross);
+//            for (int i = 1; i < 13; i++) {
+//                if(clickedFirst == i - 1 || clickedSecond == i - 1) {
+//                    int id = getResources().getIdentifier("iv_" + i, "id", getPackageName());
+//                    ImageView iv = findViewById(id);
+//                    iv.setImageResource(R.drawable.cross);
+//                }
+//            }
         }
 
-        //set all cards that are not matched yet to true so they can be selected
-        for(int i = 1; i<=12; i++) {
+        // Allow all unmatched cards to be re-selectable
+        for (int i = 1; i<=12; i++) {
             int id = getResources().getIdentifier("iv_"+i,"id", getPackageName());
             if(!matchedCards.contains(i-1))
                 findViewById(id).setEnabled(true);
         }
 
-
-
-        //check if game is over
+        // Check for win condition
         checkEnd();
-
     }
 
     private void checkEnd() {
-        // Game finish when player points reach 6
-        if(playerPoints == 6) {
-            // play finish music
+        // Win condition (all 6 pairs matched)
+        if (playerPoints == 6) {
+            // Play success jingle on game completion
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.success_jingle);
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
@@ -237,16 +250,18 @@ public class GameActivity extends AppCompatActivity {
             });
             mp.start();
 
-            // stop timer
+            // Stop timer
             timerStop();
 
             // Display end of game pop-up
-            // User able to select play another round with current images or return Main Activity
+            // Player can:
+            //  start another round using the same 6 images reshuffled
+            //  return to the main activity screen
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GameActivity.this);
             alertDialogBuilder
                     .setMessage("Game Over!\nWell Done!")
                     .setCancelable(false)
-                    .setPositiveButton("NEW", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Rematch", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getApplicationContext(), GameActivity.class);
