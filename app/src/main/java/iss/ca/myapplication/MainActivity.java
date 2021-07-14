@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     String selectedUrl = null;
     private Thread dlThread;
     boolean interrupted = false;
-
     List<String> urls = new ArrayList<>();
 
     @Override
