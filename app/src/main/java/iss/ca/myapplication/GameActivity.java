@@ -213,13 +213,6 @@ public class GameActivity extends AppCompatActivity {
             id = getResources().getIdentifier("iv_" + (clickedSecond+1), "id", getPackageName());
             ImageView iv2 = findViewById(id);
             iv2.setImageResource(R.drawable.cross);
-//            for (int i = 1; i < 13; i++) {
-//                if(clickedFirst == i - 1 || clickedSecond == i - 1) {
-//                    int id = getResources().getIdentifier("iv_" + i, "id", getPackageName());
-//                    ImageView iv = findViewById(id);
-//                    iv.setImageResource(R.drawable.cross);
-//                }
-//            }
         }
 
         // Allow all unmatched cards to be re-selectable
