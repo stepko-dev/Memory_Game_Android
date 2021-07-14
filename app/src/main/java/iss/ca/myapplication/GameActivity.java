@@ -10,8 +10,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -122,6 +125,9 @@ public class GameActivity extends AppCompatActivity {
         // Assign and display the clicked card image
         iv.setImageBitmap(bitmapArray.get(cardsArray[cardIdx]%100-1));
 
+        // Get the VIBRATOR_SERVICE system service
+        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
         // Check whether the selected card is the first or second of the pair
         if (cardNumber == 1) {
             // If first, set cardNumber to 2 for next click
@@ -163,6 +169,19 @@ public class GameActivity extends AppCompatActivity {
 
                     });
                     mp.start();
+                }
+            }
+            // Vibrate on match failure
+            else {
+                final VibrationEffect ve;
+                // Requires system version Oreo and above (APK 26 and up)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Vibrate for as long as the thread delay
+                    ve = VibrationEffect.createOneShot(700, VibrationEffect.DEFAULT_AMPLITUDE);
+
+                    // Cancel any existing vibrations
+                    vibrator.cancel();
+                    vibrator.vibrate(ve);
                 }
             }
 
