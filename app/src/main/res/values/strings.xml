@@ -5,4 +5,6 @@
         <item>https://stocksnap.io/search/beach</item>
         <item>https://stocksnap.io/search/nature</item>
     </string-array>
+    <string name="none"></string>
+    <string name="folder">images</string>
 </resources>
