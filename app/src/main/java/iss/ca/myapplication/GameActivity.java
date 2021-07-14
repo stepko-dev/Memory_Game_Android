@@ -64,7 +64,7 @@ public class GameActivity extends AppCompatActivity {
 
         // Find app_images folder and instantiate file and bitmap arrays
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        File folder = new File(String.valueOf(cw.getDir("image9Dir", Context.MODE_PRIVATE)));
+        File folder = new File(String.valueOf(cw.getDir("images", Context.MODE_PRIVATE)));
         File[] allFiles = new File[0];
         ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
 
