@@ -57,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
                         // If onclick comes in during this period, it is interrupting the download
                         // Set interrupted to true
                         interrupted = true;
+                        // Introduce button delay to prevent malicious spam fetching
+                        mSearchBtn.setEnabled(false);
+                        mSearchBtn.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSearchBtn.setEnabled(true);
+                            }
+                        }, 600);
                     }
                     // Clear existing files
                     // Restart download
