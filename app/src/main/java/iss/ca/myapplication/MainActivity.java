@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
                                 mSearchBtn.setEnabled(true);
                             }
-                        }, 600);
+                        }, 800);
                     }
                     // Clear existing files
                     // Restart download

@@ -297,4 +297,10 @@ public class GameActivity extends AppCompatActivity {
             alertDialog.show();
         }
     }
+
+    // handle back button press to restart Main Activity
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
 }
