@@ -25,7 +25,8 @@ public class HTMLDownloader {
             while((bytesRead = in.read(buf)) != -1) {
                 out.write(buf, 0, bytesRead);
             }
-            out.flush();
+
+
             return true;
         } catch (Exception e) {
             return false;
