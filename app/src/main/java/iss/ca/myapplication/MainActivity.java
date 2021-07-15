@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 }
                                                                 // once 6 images have been selected, go to second Activity
                                                                 if (selectedImage.size() == 6) {
-                                                                    //disable remaining clickable imageviews to prevent out of bounds exception
+                                                                    // disable remaining clickable imageviews to prevent out of bounds exception
                                                                     for( int i=1; i<=20; i++){
                                                                         ImageView iv = findViewById(Integer.valueOf(i));
                                                                         if (iv.isEnabled()){
