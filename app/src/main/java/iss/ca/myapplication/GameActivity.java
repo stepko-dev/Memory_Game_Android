@@ -68,11 +68,13 @@ public class GameActivity extends AppCompatActivity {
         // Find app_images folder and instantiate file and bitmap arrays
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File folder = new File(String.valueOf(cw.getDir("images", Context.MODE_PRIVATE)));
-        File[] allFiles = new File[0];
+        File[] allFiles;
         ArrayList<Bitmap> bitmapArray = new ArrayList<Bitmap>();
 
         // Extract all image files into allFiles array
         if (folder.exists()) {
+            // FilenameFilter checks the files in the folder and only accepts those that satisfy the requirements
+            // Only files ending with .jpg, .jpeg or .png are accepted
             allFiles = folder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return (name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"));
@@ -111,6 +113,8 @@ public class GameActivity extends AppCompatActivity {
     // Generate timer start method
     public void timerStart(){
         timer = findViewById(R.id.timer);
+        // SystemClock.elapsedRealtime returns the time that has passed since the system was booted
+        // The count-up timer takes reference to this time and shows that time that has passed since then
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
     }
