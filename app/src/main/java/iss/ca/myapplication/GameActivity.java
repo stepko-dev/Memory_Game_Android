@@ -293,4 +293,8 @@ public class GameActivity extends AppCompatActivity {
             alertDialog.show();
         }
     }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
 }
